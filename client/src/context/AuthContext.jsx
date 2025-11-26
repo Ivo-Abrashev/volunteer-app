@@ -1,8 +1,7 @@
 // src/context/AuthContext.jsx
-import { createContext, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import authService from '../services/authService';
-
-const AuthContext = createContext();
+import { AuthContext } from './AuthContextBase';
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -51,13 +50,8 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
-  const isAuthenticated = () => {
-    return !!user;
-  };
-
-  const hasRole = (role) => {
-    return user?.role === role;
-  };
+  const isAuthenticated = () => !!user;
+  const hasRole = (role) => user?.role === role;
 
   const value = {
     user,
@@ -69,5 +63,9 @@ export const AuthProvider = ({ children }) => {
     hasRole,
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
