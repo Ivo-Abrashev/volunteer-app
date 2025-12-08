@@ -22,7 +22,7 @@ const Navbar = () => {
               V
             </div>
             <span className="text-xl font-bold text-gray-900">
-              Доброволци<span className="text-primary-600">.bg</span>
+              Volunity<span className="text-primary-600">.bg</span>
             </span>
           </Link>
 

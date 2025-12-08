@@ -37,7 +37,7 @@ const HomePage = () => {
         </div>
 
         {/* Decorative Elements */}
-        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gray-50 transform -skew-y-2 origin-top-left"></div>
+        
       </section>
 
       {/* Features Section */}

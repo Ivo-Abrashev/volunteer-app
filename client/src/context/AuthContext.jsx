@@ -32,18 +32,36 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // const register = async (userData) => {
+  //   try {
+  //     const data = await authService.register(userData);
+  //     setUser(data.user);
+  //     return { success: true, data };
+  //   } catch (error) {
+  //     return {
+  //       success: false,
+  //       error: error.response?.data?.message || 'Грешка при регистрация',
+  //     };
+  //   }
+  // };
+
   const register = async (userData) => {
-    try {
-      const data = await authService.register(userData);
-      setUser(data.user);
-      return { success: true, data };
-    } catch (error) {
-      return {
-        success: false,
-        error: error.response?.data?.message || 'Грешка при регистрация',
-      };
-    }
-  };
+  try {
+    const data = await authService.register(userData);
+    setUser(data.user);
+    return { success: true, data };
+  } catch (error) {
+    console.error('REGISTER ERROR:', error?.response || error); // 👈 добави това
+
+    return {
+      success: false,
+      error:
+        error?.response?.data?.message ||
+        error?.response?.data?.error || // често backend връща "error"
+        'Грешка при регистрация',
+    };
+  }
+};
 
   const logout = () => {
     authService.logout();

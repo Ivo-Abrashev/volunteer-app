@@ -14,6 +14,7 @@ const generateToken = (userId, email, role) => {
 
 // РЕГИСТРАЦИЯ
 exports.register = async (req, res) => {
+  console.log('REGISTER REQ BODY:', req.body); // 👈 добави това
   try {
     const { email, password, firstName, lastName, phone, dateOfBirth } = req.body;
 
@@ -59,8 +60,10 @@ exports.register = async (req, res) => {
       ])
       .select('id, email, first_name, last_name, role, created_at')
       .single();
+      console.log('NEW USER:', newUser);
 
     if (error) throw error;
+    
 
     // 5. Генерирай JWT токен
     const token = generateToken(newUser.id, newUser.email, newUser.role);
