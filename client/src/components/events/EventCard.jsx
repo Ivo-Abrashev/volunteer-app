@@ -1,9 +1,14 @@
-// src/components/events/EventCard.jsx
 import { Link } from 'react-router-dom';
 import Card from '../common/Card';
 import Button from '../common/Button';
 
-const EventCard = ({ event, showActions = false, onRegister, onUnregister }) => {
+const EventCard = ({
+  event,
+  showActions = false,
+  isRegistered = false,
+  onRegister,
+  onUnregister,
+}) => {
   // Форматиране на дата
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -24,7 +29,8 @@ const EventCard = ({ event, showActions = false, onRegister, onUnregister }) => 
     култура: 'bg-pink-100 text-pink-800',
   };
 
-  const categoryColor = categoryColors[event.category?.toLowerCase()] || 'bg-gray-100 text-gray-800';
+  const categoryColor =
+    categoryColors[event.category?.toLowerCase()] || 'bg-gray-100 text-gray-800';
 
   // Status badge
   const statusBadge = {
@@ -58,7 +64,9 @@ const EventCard = ({ event, showActions = false, onRegister, onUnregister }) => 
 
         {/* Category Badge */}
         <div className="absolute top-3 left-3">
-          <span className={`px-3 py-1 rounded-full text-xs font-semibold ${categoryColor}`}>
+          <span
+            className={`px-3 py-1 rounded-full text-xs font-semibold ${categoryColor}`}
+          >
             {event.category || 'Общо'}
           </span>
         </div>
@@ -66,7 +74,9 @@ const EventCard = ({ event, showActions = false, onRegister, onUnregister }) => 
         {/* Status Badge (ако е различен от published) */}
         {event.status !== 'published' && (
           <div className="absolute top-3 right-3">
-            <span className={`px-3 py-1 rounded-full text-xs font-semibold ${status.color}`}>
+            <span
+              className={`px-3 py-1 rounded-full text-xs font-semibold ${status.color}`}
+            >
               {status.text}
             </span>
           </div>
@@ -134,26 +144,30 @@ const EventCard = ({ event, showActions = false, onRegister, onUnregister }) => 
             </Button>
           </Link>
 
-          {showActions && onRegister && (
-            <Button
-              variant="primary"
-              size="sm"
-              onClick={() => onRegister(event.id)}
-              className="flex-1"
-            >
-              Запиши се
-            </Button>
-          )}
+          {showActions && (
+            <>
+              {!isRegistered && onRegister && (
+                <Button
+                  variant="primary"
+                  size="sm"
+                  onClick={() => onRegister(event.id)}
+                  className="flex-1"
+                >
+                  Запиши се
+                </Button>
+              )}
 
-          {showActions && onUnregister && (
-            <Button
-              variant="danger"
-              size="sm"
-              onClick={() => onUnregister(event.id)}
-              className="flex-1"
-            >
-              Отпиши се
-            </Button>
+              {isRegistered && onUnregister && (
+                <Button
+                  variant="danger"
+                  size="sm"
+                  onClick={() => onUnregister(event.id)}
+                  className="flex-1"
+                >
+                  Отпиши се
+                </Button>
+              )}
+            </>
           )}
         </div>
       </div>

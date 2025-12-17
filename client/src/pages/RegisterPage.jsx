@@ -14,6 +14,7 @@ const RegisterPage = () => {
     firstName: '',
     lastName: '',
     phone: '',
+    role: 'user', // НОВО!
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
@@ -72,30 +73,32 @@ const RegisterPage = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (!validateForm()) {
-      return;
+  if (!validateForm()) {
+    return;
+  }
+
+  setLoading(true);
+
+  try {
+    // exclude confirmPassword from the payload; rename the extracted variable to start with an underscore
+    // so it is allowed to be unused by the linter
+    const { confirmPassword: _confirmPassword, ...registerData } = formData;
+    // role вече е включена в registerData ✅
+    const result = await register(registerData);
+
+    if (result.success) {
+      navigate('/events');
+    } else {
+      setErrors({ general: result.error });
     }
-
-    setLoading(true);
-
-    try {
-      const registerData = { ...formData };
-      delete registerData.confirmPassword;
-      const result = await register(registerData);
-
-      if (result.success) {
-        navigate('/events');
-      } else {
-        setErrors({ general: result.error });
-      }
-    } catch {
-      setErrors({ general: 'Възникна грешка. Моля опитайте отново.' });
-    } finally {
-      setLoading(false);
-    }
-  };
+  } catch {
+    setErrors({ general: 'Възникна грешка. Моля опитайте отново.' });
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-50 to-secondary-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -162,6 +165,25 @@ const RegisterPage = () => {
               onChange={handleChange}
               placeholder="+359 888 123 456"
             />
+
+            {/* Role Selection */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Искам да съм: <span className="text-red-500">*</span>
+              </label>
+              <select
+                name="role"
+                value={formData.role}
+                onChange={handleChange}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+              >
+                <option value="user">👤 Доброволец (User)</option>
+                <option value="organizer">🎯 Организатор (Organizer)</option>
+              </select>
+              <p className="text-xs text-gray-600 mt-1">
+                Организаторите могат да създават събития и организации
+              </p>
+            </div>
 
             {/* Password */}
             <Input

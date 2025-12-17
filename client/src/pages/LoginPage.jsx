@@ -163,6 +163,7 @@ const LoginPage = () => {
           <div className="text-xs text-blue-800 space-y-1">
             <p>👤 User: user@test.bg / test123</p>
             <p>🎯 Organizer: organizer@test.bg / test123</p>
+            <p>🎯 Organizer 2: testOrg@abv.bg / test123</p>
             <p>⚡ Admin: admin@test.bg / admin123</p>
           </div>
         </Card>

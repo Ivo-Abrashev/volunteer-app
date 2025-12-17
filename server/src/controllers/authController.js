@@ -14,11 +14,10 @@ const generateToken = (userId, email, role) => {
 
 // РЕГИСТРАЦИЯ
 exports.register = async (req, res) => {
-  console.log('REGISTER REQ BODY:', req.body); // 👈 добави това
   try {
-    const { email, password, firstName, lastName, phone, dateOfBirth } = req.body;
+    const { email, password, firstName, lastName, phone, dateOfBirth, role } = req.body; // Добави role
 
-    // 1. Валидация на данните
+    // Валидация
     if (!email || !password || !firstName || !lastName) {
       return res.status(400).json({
         success: false,
@@ -26,7 +25,7 @@ exports.register = async (req, res) => {
       });
     }
 
-    // 2. Провери дали email вече съществува
+    // Провери дали email вече съществува
     const { data: existingUser } = await supabase
       .from('users')
       .select('email')
@@ -40,11 +39,15 @@ exports.register = async (req, res) => {
       });
     }
 
-    // 3. Хеширай паролата
-    const salt = await bcrypt.genSalt(10);  // "сол" за хеширане
+    // Хеширай паролата
+    const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // 4. Създай потребителя в базата
+    // Валидирай role
+    const allowedRoles = ['user', 'organizer'];
+    const userRole = allowedRoles.includes(role) ? role : 'user';
+
+    // Създай потребителя
     const { data: newUser, error } = await supabase
       .from('users')
       .insert([
@@ -55,20 +58,17 @@ exports.register = async (req, res) => {
           last_name: lastName,
           phone: phone || null,
           date_of_birth: dateOfBirth || null,
-          role: 'user'  // По подразбиране всеки е user
+          role: userRole, // ОБНОВЕНО!
         }
       ])
       .select('id, email, first_name, last_name, role, created_at')
       .single();
-      console.log('NEW USER:', newUser);
 
     if (error) throw error;
-    
 
-    // 5. Генерирай JWT токен
+    // Генерирай JWT токен
     const token = generateToken(newUser.id, newUser.email, newUser.role);
 
-    // 6. Върни отговор
     res.status(201).json({
       success: true,
       message: 'Регистрацията е успешна!',

@@ -12,6 +12,7 @@ const EventsPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [searchParams, setSearchParams] = useSearchParams();
+  const [myRegistrations, setMyRegistrations] = useState([]); // НОВО!
   
   const { isAuthenticated } = useAuth();
 
@@ -19,7 +20,7 @@ const EventsPage = () => {
   const [filters, setFilters] = useState({
     search: searchParams.get('search') || '',
     category: searchParams.get('category') || '',
-    status: 'published', // Винаги показвай само публикувани
+    status: 'published',
   });
 
   // Fetch събития
@@ -38,9 +39,25 @@ const EventsPage = () => {
     }
   };
 
+  // Fetch моите регистрации
+  const fetchMyRegistrations = async () => {
+    if (!isAuthenticated()) return;
+
+    try {
+      const data = await eventService.getMyRegistrations();
+      const eventIds = data.registrations
+        .filter((reg) => reg.status === 'confirmed')
+        .map((reg) => reg.events.id);
+      setMyRegistrations(eventIds);
+    } catch (err) {
+      console.error('Грешка при зареждане на регистрации:', err);
+    }
+  };
+
   // При промяна на филтри
   useEffect(() => {
     fetchEvents();
+    fetchMyRegistrations();
   }, [filters]);
 
   // Handle search
@@ -74,9 +91,26 @@ const EventsPage = () => {
     try {
       await eventService.registerForEvent(eventId);
       alert('Успешно се записахте за събитието!');
-      fetchEvents(); // Refresh
+      fetchEvents();
+      fetchMyRegistrations();
     } catch (err) {
       alert(err.response?.data?.message || 'Грешка при записване');
+    }
+  };
+
+  // Handle unregister
+  const handleUnregister = async (eventId) => {
+    if (!confirm('Сигурни ли сте, че искате да се отпишете?')) {
+      return;
+    }
+
+    try {
+      await eventService.unregisterFromEvent(eventId);
+      alert('Успешно се отписахте от събитието');
+      fetchEvents();
+      fetchMyRegistrations();
+    } catch (err) {
+      alert(err.response?.data?.message || 'Грешка при отписване');
     }
   };
 
@@ -170,14 +204,19 @@ const EventsPage = () => {
                   Намерени {events.length} {events.length === 1 ? 'събитие' : 'събития'}
                 </div>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {events.map((event) => (
-                    <EventCard
-                      key={event.id}
-                      event={event}
-                      showActions={isAuthenticated()}
-                      onRegister={handleRegister}
-                    />
-                  ))}
+                  {events.map((event) => {
+                    const isRegistered = myRegistrations.includes(event.id);
+                    
+                    return (
+                      <EventCard
+                        key={event.id}
+                        event={event}
+                        showActions={isAuthenticated()}
+                        onRegister={!isRegistered ? handleRegister : null}
+                        onUnregister={isRegistered ? handleUnregister : null}
+                      />
+                    );
+                  })}
                 </div>
               </>
             ) : (

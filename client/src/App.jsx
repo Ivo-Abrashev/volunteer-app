@@ -2,6 +2,8 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { useAuth } from './hooks/useAuth';
+import EventDetailsPage from './pages/EventDetailsPage';
+import CreateEventPage from './pages/CreateEventPage';
 
 // Layout
 import Navbar from './components/common/Navbar';
@@ -15,6 +17,8 @@ import ProfilePage from './pages/ProfilePage';
 import MyEventsPage from './pages/MyEventsPage';
 import DashboardPage from './pages/DashboardPage';
 import AdminDashboardPage from './pages/AdminDashboardPage';
+import EditEventPage from './pages/EditEventPage';
+import EventParticipantsPage from './pages/EventParticipantsPage';
 
 // Protected Route Component
 const ProtectedRoute = ({ children, allowedRoles = [] }) => {
@@ -48,9 +52,9 @@ function AppContent() {
           {/* Public Routes */}
           <Route path="/" element={<HomePage />} />
           <Route path="/events" element={<EventsPage />} />
+          <Route path="/events/:id" element={<EventDetailsPage />} />  {/* НОВО! */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
-
           {/* Protected Routes - All authenticated users */}
           <Route
             path="/profile"
@@ -75,6 +79,30 @@ function AppContent() {
             element={
               <ProtectedRoute allowedRoles={['organizer', 'admin']}>
                 <DashboardPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/create-event"
+            element={
+              <ProtectedRoute allowedRoles={['organizer', 'admin']}>
+                <CreateEventPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/events/:id/edit"
+            element={
+              <ProtectedRoute allowedRoles={['organizer', 'admin']}>
+                <EditEventPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/events/:id/participants"
+            element={
+              <ProtectedRoute allowedRoles={['organizer', 'admin']}>
+                <EventParticipantsPage />
               </ProtectedRoute>
             }
           />

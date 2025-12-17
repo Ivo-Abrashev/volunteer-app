@@ -43,17 +43,34 @@ exports.getAllEvents = async (req, res) => {
     // Pagination (страниране)
     query = query.range(offset, offset + limit - 1);
 
-    const { data: events, error, count } = await query;
+    const { data: events, error } = await query;
 
     if (error) throw error;
 
+    // Добави броя на участниците за всяко събитие
+    const eventsWithParticipants = await Promise.all(
+      events.map(async (event) => {
+        const { count } = await supabase
+          .from('registrations')
+          .select('*', { count: 'exact', head: true })
+          .eq('event_id', event.id)
+          .eq('status', 'confirmed');
+
+        return {
+          ...event,
+          participantsCount: count || 0,
+        };
+      })
+    );
+
     res.json({
       success: true,
-      count: events.length,
-      events: events
-    });
+      count: eventsWithParticipants.length,
+      events: eventsWithParticipants,
+        });
 
   } catch (error) {
+    
     console.error('Грешка при зареждане на събития:', error);
     res.status(500).json({
       success: false,
