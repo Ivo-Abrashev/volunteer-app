@@ -1,4 +1,5 @@
 // src/pages/DashboardPage.jsx
+// Organizer Dashboard Page
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import eventService from '../services/eventService';
@@ -46,6 +47,25 @@ const DashboardPage = () => {
       fetchMyEvents(); // Refresh
     } catch (err) {
       alert(err.response?.data?.message || 'Грешка при изтриване');
+    }
+  };
+
+  // Handle publish
+  const handlePublish = async (eventId, eventTitle) => {
+    if (
+      !confirm(
+        `Искате ли да публикувате "${eventTitle}"?\n\nСъбитието ще стане видимо за всички потребители.`
+      )
+    ) {
+      return;
+    }
+
+    try {
+      await eventService.updateEvent(eventId, { status: 'published' });
+      alert('Събитието е публикувано успешно! 🎉');
+      fetchMyEvents(); // Refresh
+    } catch (err) {
+      alert(err.response?.data?.message || 'Грешка при публикуване');
     }
   };
 
@@ -264,18 +284,14 @@ const DashboardPage = () => {
                         </Link>
 
                         {event.status === 'draft' && (
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            onClick={() => {
-                              // Публикувай
-                              // TODO: Implement publish
-                              alert('Функцията "Публикувай" скоро идва!');
-                            }}
-                          >
-                            ✓ Публикувай
-                          </Button>
-                        )}
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          onClick={() => handlePublish(event.id, event.title)}
+                        >
+                          ✓ Публикувай
+                        </Button>
+                      )}
 
                         <Button
                           variant="danger"

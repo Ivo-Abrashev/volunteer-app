@@ -4,6 +4,9 @@ import { AuthProvider } from './context/AuthContext';
 import { useAuth } from './hooks/useAuth';
 import EventDetailsPage from './pages/EventDetailsPage';
 import CreateEventPage from './pages/CreateEventPage';
+import AdminUsersPage from './pages/AdminUsersPage';
+import AdminEventsPage from './pages/AdminEventsPage';
+import AdminStatisticsPage from './pages/AdminStatisticsPage';
 
 // Layout
 import Navbar from './components/common/Navbar';
@@ -113,6 +116,30 @@ function AppContent() {
             element={
               <ProtectedRoute allowedRoles={['admin']}>
                 <AdminDashboardPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/users"
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <AdminUsersPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/events"
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <AdminEventsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/statistics"
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <AdminStatisticsPage />
               </ProtectedRoute>
             }
           />

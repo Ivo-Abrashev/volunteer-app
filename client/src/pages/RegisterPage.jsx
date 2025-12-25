@@ -166,6 +166,15 @@ const RegisterPage = () => {
               placeholder="+359 888 123 456"
             />
 
+            {/* Date of Birth */}
+            <Input
+              label="Дата на раждане"
+              type="date"
+              name="dateOfBirth"
+              value={formData.dateOfBirth}
+              onChange={handleChange}
+            />
+
             {/* Role Selection */}
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700 mb-1">

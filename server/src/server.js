@@ -15,6 +15,8 @@ app.use(express.json());
 const authRoutes = require('./routes/authRoutes');
 const eventRoutes = require('./routes/eventRoutes'); 
 const registrationRoutes = require('./routes/registrationRoutes'); 
+const adminRoutes = require('./routes/adminRoutes');
+const userRoutes = require('./routes/userRoutes'); // НОВО!
 
 // Основен route
 app.get('/', (req, res) => {
@@ -29,13 +31,15 @@ app.get('/', (req, res) => {
 app.use('/api/auth', authRoutes);  // Authentication routes
 app.use('/api/events', eventRoutes); // Event routes
 app.use('/api', registrationRoutes); // Registration routes
+app.use('/api/admin', adminRoutes); // Admin routes
+app.use('/api/users', userRoutes); // НОВО!
 
 // Тестов route - вземи всички потребители (за debug)
 app.get('/api/users', async (req, res) => {
   try {
     const { data, error } = await supabase
       .from('users')
-      .select('id, email, first_name, last_name, role, created_at');
+      .select('id, email, first_name, last_name, phone, role, created_at');
     
     if (error) throw error;
     
