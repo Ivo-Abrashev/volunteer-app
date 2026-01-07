@@ -4,6 +4,8 @@ import { useParams, Link } from 'react-router-dom';
 import eventService from '../services/eventService';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
+import { showSuccess, showError } from '../utils/toast';
+
 
 const EventParticipantsPage = () => {
   const { id } = useParams();
@@ -38,14 +40,14 @@ const EventParticipantsPage = () => {
   const handleMarkAttendance = async (registrationId, attended) => {
     try {
       await eventService.markAttendance(registrationId, attended);
-      alert(
+      showSuccess(
         attended
           ? 'Присъствието е маркирано ✅'
           : 'Отсъствието е маркирано'
       );
       fetchParticipants(); // Refresh
     } catch (err) {
-      alert(err.response?.data?.message || 'Грешка при маркиране');
+      showError(err.response?.data?.message || 'Грешка при маркиране');
     }
   };
 

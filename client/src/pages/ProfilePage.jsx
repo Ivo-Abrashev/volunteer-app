@@ -7,6 +7,8 @@ import api from '../services/api';
 import Input from '../components/common/Input';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
+import { showSuccess, showError } from '../utils/toast';
+
 
 const ProfilePage = () => {
   const { user, logout } = useAuth();
@@ -96,7 +98,7 @@ const ProfilePage = () => {
       };
       localStorage.setItem('user', JSON.stringify(updatedUser));
 
-      alert('Профилът е обновен успешно! ✅');
+      showSuccess('Профилът е обновен успешно! ✅');
     } catch (err) {
       setErrors({
         general: err.response?.data?.message || 'Грешка при обновяване на профил',
@@ -131,7 +133,7 @@ const ProfilePage = () => {
         newPassword: passwordData.newPassword,
       });
 
-      alert('Паролата е променена успешно! ✅');
+      showSuccess('Паролата е променена успешно! ✅');
       setPasswordData({
         currentPassword: '',
         newPassword: '',
@@ -161,17 +163,17 @@ const ProfilePage = () => {
     );
 
     if (confirmation !== 'ИЗТРИЙ') {
-      alert('Изтриването е отменено');
+      showError('Изтриването е отменено');
       return;
     }
 
     try {
       await api.delete('/users/profile');
-      alert('Профилът е изтрит');
+      showSuccess('Профилът е изтрит');
       logout();
       navigate('/');
     } catch (err) {
-      alert(err.response?.data?.message || 'Грешка при изтриване на профил');
+      showError(err.response?.data?.message || 'Грешка при изтриване на профил');
     }
   };
 

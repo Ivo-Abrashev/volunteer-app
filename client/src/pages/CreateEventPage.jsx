@@ -5,6 +5,8 @@ import eventService from '../services/eventService';
 import Input from '../components/common/Input';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
+import LocationInput from '../components/common/LocationInput'; 
+import { showSuccess } from '../utils/toast';
 
 const CreateEventPage = () => {
   const navigate = useNavigate();
@@ -14,6 +16,8 @@ const CreateEventPage = () => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
+    latitude: null,
+    longitude: null,
     location: '',
     eventDate: '',
     duration: '',
@@ -79,7 +83,7 @@ const CreateEventPage = () => {
 
       await eventService.createEvent(eventData);
 
-      alert('Събитието е създадено успешно! 🎉');
+      showSuccess('Събитието е създадено успешно! 🎉');
       navigate('/dashboard');
     } catch (err) {
       setErrors({
@@ -189,14 +193,20 @@ const CreateEventPage = () => {
             </div>
 
             {/* Location */}
-            <Input
+            <LocationInput
               label="Локация"
-              type="text"
               name="location"
               value={formData.location}
               onChange={handleChange}
+              onLocationSelect={(location) => {
+                setFormData((prev) => ({
+                  ...prev,
+                  location: location.address,
+                  latitude: location.lat,
+                  longitude: location.lng,
+                }));
+              }}
               error={errors.location}
-              placeholder="напр. Централен парк, Пловдив"
               required
             />
 

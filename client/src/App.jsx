@@ -17,11 +17,12 @@ import EventsPage from './pages/EventsPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import ProfilePage from './pages/ProfilePage';
-import MyEventsPage from './pages/MyEventsPage';
+import MyEventsPage from './pages/MyEventsPagе';
 import DashboardPage from './pages/DashboardPage';
 import AdminDashboardPage from './pages/AdminDashboardPage';
 import EditEventPage from './pages/EditEventPage';
 import EventParticipantsPage from './pages/EventParticipantsPage';
+import { Toaster } from 'react-hot-toast';
 
 // Protected Route Component
 const ProtectedRoute = ({ children, allowedRoles = [] }) => {
@@ -51,6 +52,33 @@ function AppContent() {
     <Router>
       <div className="min-h-screen bg-gray-50">
         <Navbar />
+        <Toaster
+          position="top-right"
+          reverseOrder={false}
+          toastOptions={{
+          duration: 3000,
+          style: {
+            background: '#363636',
+            color: '#fff',
+            padding: '16px',
+            borderRadius: '8px',
+          },
+          success: {
+            duration: 3000,
+            iconTheme: {
+              primary: '#10b981',
+              secondary: '#fff',
+            },
+          },
+          error: {
+            duration: 4000,
+            iconTheme: {
+              primary: '#ef4444',
+              secondary: '#fff',
+            },
+          },
+        }}
+      />
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<HomePage />} />

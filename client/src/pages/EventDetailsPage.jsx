@@ -6,6 +6,9 @@ import { useAuth } from '../hooks/useAuth';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
 import { formatDateTime, getDaysUntil, getCategoryEmoji, getCategoryColor } from '../utils/helpers';
+import MapView from '../components/common/mapView';
+import { showSuccess, showError } from '../utils/toast';
+import toast from 'react-hot-toast';
 
 const EventDetailsPage = () => {
   const { id } = useParams();
@@ -59,31 +62,33 @@ const EventDetailsPage = () => {
 
     try {
       await eventService.registerForEvent(id);
-      alert('Успешно се записахте за събитието! 🎉');
+      showSuccess('Успешно се записахте за събитието! 🎉');
       fetchEvent(); // Refresh
     } catch (err) {
-      alert(err.response?.data?.message || 'Грешка при записване');
+      showError(err.response?.data?.message || 'Грешка при записване');
     } finally {
       setActionLoading(false);
     }
   };
 
   // Handle unregister
-  const handleUnregister = async () => {
-    if (!confirm('Сигурни ли сте, че искате да се отпишете?')) {
-      return;
-    }
+  const handleUnregister = async (eventId) => {
+    const ok = window.confirm('Сигурни ли сте, че искате да се отпишете?');
+    if (!ok) return;
 
-    setActionLoading(true);
+    const promise = eventService.unregisterFromEvent(eventId);
+
+    toast.promise(promise, {
+      loading: 'Отписване...',
+      success: 'Успешно се отписахте ✅',
+      error: (err) => err.response?.data?.message || 'Грешка при отписване',
+    });
 
     try {
-      await eventService.unregisterFromEvent(id);
-      alert('Успешно се отписахте от събитието');
-      fetchEvent(); // Refresh
-    } catch (err) {
-      alert(err.response?.data?.message || 'Грешка при отписване');
-    } finally {
-      setActionLoading(false);
+      await promise;
+      // refresh / update state
+    } catch {
+      // error handled by toast.promise
     }
   };
 
@@ -226,22 +231,35 @@ const EventDetailsPage = () => {
                   </p>
                 </div>
 
-                {/* Google Maps */}
-                <div className="mt-6, mb-6">
-                    <h4 className="font-semibold text-gray-900 mb-2">Карта</h4>
-                    <div className="aspect-video rounded-lg overflow-hidden bg-gray-200">
-                        <iframe
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2812.0111549403996!2d24.744647275919217!3d42.14194437121407!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14acd1b0f4d72103%3A0x2dbfbf91b938256a!2z4oCe0KbQsNGAINCh0LjQvNC10L7QvdC-0LLQsCDQs9GA0LDQtNC40L3QsOKAnA!5e1!3m2!1sbg!2sbg!4v1765207156064!5m2!1sbg!2sbg"
-                        width="100%"
-                        height="100%"
-                        style={{ border: 0 }}
-                        allowFullScreen
-                        loading="lazy"
-                        referrerPolicy="no-referrer-when-downgrade"
-                        title="Event Location Map"
-                        />
+                {/* Location */}
+                  <div className="flex items-start">
+                    <span className="text-2xl mr-3">📍</span>
+                    <div>
+                      <p className="text-sm text-gray-600">Локация</p>
+                      <p className="font-semibold text-gray-900">
+                        {event.location}
+                      </p>
                     </div>
-                </div>
+                  </div>
+
+                {event.latitude != null && event.longitude != null && (
+                  <div className="mt-4 relative z-0">
+                    <MapView
+                      lat={Number(event.latitude)}
+                      lng={Number(event.longitude)}
+                      location={event.location}
+                      height="350px"
+                    />
+                    <a
+                      href={`https://www.openstreetmap.org/?mlat=${event.latitude}&mlon=${event.longitude}#map=15/${event.latitude}/${event.longitude}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-primary-600 hover:text-primary-700 mt-2 inline-block"
+                    >
+                      📍 Отвори в OpenStreetMap →
+                    </a>
+                  </div>
+                )}
 
                 {/* Organizer Info */}
                 {event.users && (
@@ -434,12 +452,18 @@ const EventDetailsPage = () => {
                   Сподели
                 </h3>
                 <div className="flex gap-2">
-                  <button className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                    Facebook
-                  </button>
-                  <button className="flex-1 px-4 py-2 bg-sky-500 text-white rounded-lg hover:bg-sky-600 transition-colors">
-                    Twitter
-                  </button>
+                  
+                  <a href="https://www.facebook.com/sharer/sharer.php?u=https://yourapp.com/events/{event.id}" target="_blank" rel="noopener noreferrer" className="flex-1">
+                    <button className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                      Facebook
+                    </button>
+                  </a>
+
+                  <a href="https://www.instagram.com/?url=https://yourapp.com/events/{event.id}" target="_blank" rel="noopener noreferrer" className="flex-1">
+                    <button className="flex-1 px-4 py-2 bg-sky-500 text-white rounded-lg hover:bg-sky-600 transition-colors">
+                      Instagram
+                    </button>
+                  </a>
                 </div>
               </Card>
             </div>

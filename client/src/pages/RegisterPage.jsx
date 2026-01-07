@@ -175,25 +175,6 @@ const RegisterPage = () => {
               onChange={handleChange}
             />
 
-            {/* Role Selection */}
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Искам да съм: <span className="text-red-500">*</span>
-              </label>
-              <select
-                name="role"
-                value={formData.role}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-              >
-                <option value="user">👤 Доброволец (User)</option>
-                <option value="organizer">🎯 Организатор (Organizer)</option>
-              </select>
-              <p className="text-xs text-gray-600 mt-1">
-                Организаторите могат да създават събития и организации
-              </p>
-            </div>
-
             {/* Password */}
             <Input
               label="Парола"

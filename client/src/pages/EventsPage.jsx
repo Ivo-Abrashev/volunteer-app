@@ -6,6 +6,8 @@ import EventCard from '../components/events/EventCard';
 import Input from '../components/common/Input';
 import Button from '../components/common/Button';
 import { useAuth } from '../hooks/useAuth';
+import { showSuccess, showError } from '../utils/toast';
+
 
 const EventsPage = () => {
   const [events, setEvents] = useState([]);
@@ -84,17 +86,17 @@ const EventsPage = () => {
   // Handle register
   const handleRegister = async (eventId) => {
     if (!isAuthenticated()) {
-      alert('Моля влезте в профила си за да се запишете!');
+      showError('Моля влезте в профила си за да се запишете!');
       return;
     }
 
     try {
       await eventService.registerForEvent(eventId);
-      alert('Успешно се записахте за събитието!');
+      showSuccess('Успешно се записахте за събитието!');
       fetchEvents();
       fetchMyRegistrations();
     } catch (err) {
-      alert(err.response?.data?.message || 'Грешка при записване');
+      showError(err.response?.data?.message || 'Грешка при записване');
     }
   };
 
@@ -106,11 +108,11 @@ const EventsPage = () => {
 
     try {
       await eventService.unregisterFromEvent(eventId);
-      alert('Успешно се отписахте от събитието');
+      showSuccess('Успешно се отписахте от събитието');
       fetchEvents();
       fetchMyRegistrations();
     } catch (err) {
-      alert(err.response?.data?.message || 'Грешка при отписване');
+      showError(err.response?.data?.message || 'Грешка при отписване');
     }
   };
 

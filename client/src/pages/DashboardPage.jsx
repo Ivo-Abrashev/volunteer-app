@@ -7,6 +7,8 @@ import { useAuth } from '../hooks/useAuth';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
 import { formatDateTime, getDaysUntil, getCategoryColor } from '../utils/helpers';
+import { showSuccess, showError } from '../utils/toast';
+import toast from 'react-hot-toast';
 
 const DashboardPage = () => {
   const [myEvents, setMyEvents] = useState([]);
@@ -41,12 +43,19 @@ const DashboardPage = () => {
       return;
     }
 
+    const promise = eventService.deleteEvent(eventId);
+
+    toast.promise(promise, {
+      loading: 'Изтриване...',
+      success: 'Събитието е изтрито успешно!',
+      error: (err) => err.response?.data?.message || 'Грешка при изтриване',
+    });
+
     try {
-      await eventService.deleteEvent(eventId);
-      alert('Събитието е изтрито успешно!');
-      fetchMyEvents(); // Refresh
-    } catch (err) {
-      alert(err.response?.data?.message || 'Грешка при изтриване');
+      await promise;
+      fetchMyEvents();
+    } catch {
+      // Error handled by toast.promise
     }
   };
 
@@ -62,10 +71,10 @@ const DashboardPage = () => {
 
     try {
       await eventService.updateEvent(eventId, { status: 'published' });
-      alert('Събитието е публикувано успешно! 🎉');
+      showSuccess('Събитието е публикувано успешно! 🎉');
       fetchMyEvents(); // Refresh
     } catch (err) {
-      alert(err.response?.data?.message || 'Грешка при публикуване');
+      showError(err.response?.data?.message || 'Грешка при публикуване');
     }
   };
 

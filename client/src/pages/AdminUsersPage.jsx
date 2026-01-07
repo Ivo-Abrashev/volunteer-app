@@ -4,11 +4,19 @@ import { Link } from 'react-router-dom';
 import api from '../services/api';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
+import RoleChangeModal from '../components/common/RoleChangeModal';
+import toast from 'react-hot-toast';
 
 const AdminUsersPage = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all'); // all, user, organizer, admin
+  const [roleModal, setRoleModal] = useState({
+  isOpen: false,
+  userId: null,
+  currentRole: null,
+  userName: '',
+});
 
   // Fetch users
   const fetchUsers = async () => {
@@ -29,34 +37,45 @@ const AdminUsersPage = () => {
   }, []);
 
   // Change role
-  const handleChangeRole = async (userId, currentRole) => {
-    const roles = ['user', 'organizer', 'admin'];
-    const newRole = prompt(
-      `Промяна на роля за потребител ${userId}\n\nВъведете нова роля: user, organizer или admin`,
-      currentRole
-    );
+  // Отвори modal
+  const openRoleModal = (userId, currentRole, userName) => {
+    setRoleModal({
+      isOpen: true,
+      userId,
+      currentRole,
+      userName,
+    });
+  };
+  // Промени ролята
+  const handleChangeRole = async (newRole) => {
+    const promise = api.put(`/admin/users/${roleModal.userId}/role`, {
+      role: newRole,
+    });
 
-    if (!newRole || !roles.includes(newRole.toLowerCase())) {
-      alert('Невалидна роля!');
-      return;
-    }
-
-    if (newRole.toLowerCase() === currentRole) {
-      return; // Няма промяна
-    }
+    toast.promise(promise, {
+      loading: 'Промяна на роля...',
+      success: 'Ролята е променена успешно! ✅',
+      error: (err) => err.response?.data?.message || 'Грешка при промяна на роля',
+    });
 
     try {
-      // TODO: Трябва да създадеш endpoint в backend за промяна на роля
-      await api.put(`/admin/users/${userId}/role`, {
-        role: newRole.toLowerCase(),
-      });
-
-      alert('Ролята е променена успешно! ✅');
-      fetchUsers(); // Refresh
-    } catch (err) {
-      alert(err.response?.data?.message || 'Грешка при промяна на роля');
+      await promise;
+      fetchUsers();
+    } catch {
+    // Error handled by toast.promise
     }
   };
+
+  // Затвори modal
+  const closeRoleModal = () => {
+    setRoleModal({
+      isOpen: false,
+      userId: null,
+      currentRole: null,
+      userName: '',
+    });
+  };
+
 
   // Delete user
   const handleDeleteUser = async (userId, userName) => {
@@ -68,14 +87,20 @@ const AdminUsersPage = () => {
       return;
     }
 
-    try {
-      // TODO: Трябва да създадеш endpoint в backend за изтриване на потребител
-      await api.delete(`/admin/users/${userId}`);
+    const promise = api.delete(`/admin/users/${userId}`);
 
-      alert('Потребителят е изтрит успешно!');
-      fetchUsers(); // Refresh
-    } catch (err) {
-      alert(err.response?.data?.message || 'Грешка при изтриване на потребител');
+    toast.promise(promise, {
+      loading: 'Изтриване...',
+      success: 'Потребителят е изтрит успешно!',
+      error: (err) =>
+        err.response?.data?.message || 'Грешка при изтриване на потребител',
+    });
+
+    try {
+      await promise;
+      fetchUsers();
+    } catch {
+      // Error handled by toast.promise
     }
   };
 
@@ -240,7 +265,11 @@ const AdminUsersPage = () => {
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => handleChangeRole(user.id, user.role)}
+                          onClick={() => 
+                            openRoleModal(user.id, user.role, `${user.first_name} ${user.last_name}`
+
+                            )
+                          }
                         >
                           🔄 Роля
                         </Button>
@@ -271,6 +300,15 @@ const AdminUsersPage = () => {
           )}
         </Card>
       </div>
+
+      {/* Role Change Modal */}
+      <RoleChangeModal
+        isOpen={roleModal.isOpen}
+        onClose={closeRoleModal}
+        currentRole={roleModal.currentRole}
+        userName={roleModal.userName}
+        onConfirm={handleChangeRole}
+      />
     </div>
   );
 };

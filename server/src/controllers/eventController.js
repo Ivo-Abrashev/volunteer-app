@@ -148,6 +148,8 @@ exports.createEvent = async (req, res) => {
       description,
       organizationId,
       location,
+      latitude,
+      longitude,
       eventDate,
       duration,
       maxParticipants,
@@ -190,6 +192,8 @@ exports.createEvent = async (req, res) => {
           organization_id: organizationId || null,
           created_by: req.user.id,
           location,
+          latitude: latitude ?? null,
+          longitude: longitude ?? null,
           event_date: eventDate,
           duration,
           max_participants: maxParticipants,
@@ -234,6 +238,8 @@ exports.updateEvent = async (req, res) => {
       title,
       description,
       location,
+      latitude,
+      longitude,
       eventDate,
       duration,
       maxParticipants,
@@ -269,6 +275,8 @@ exports.updateEvent = async (req, res) => {
     if (title) updateData.title = title;
     if (description) updateData.description = description;
     if (location) updateData.location = location;
+    if (latitude !== undefined) updateData.latitude = latitude;
+    if (longitude !== undefined) updateData.longitude = longitude;
     if (eventDate) updateData.event_date = eventDate;
     if (duration !== undefined) updateData.duration = duration;
     if (maxParticipants !== undefined) updateData.max_participants = maxParticipants;

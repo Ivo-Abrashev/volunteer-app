@@ -1,26 +1,51 @@
 // src/pages/AdminEventsPage.jsx
-import { useState, useEffect } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
+
+import StatusChangeModal from '../components/common/StatusChangeModal';
 import eventService from '../services/eventService';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
 import { getCategoryColor } from '../utils/helpers';
 
+const STATUS_OPTIONS = ['draft', 'published', 'cancelled', 'completed'];
+
+const STATUS_LABELS = {
+  draft: 'Чернова',
+  published: 'Публикувано',
+  cancelled: 'Отменено',
+  completed: 'Завършено',
+};
+
+const STATUS_COLORS = {
+  draft: 'bg-yellow-100 text-yellow-800',
+  published: 'bg-green-100 text-green-800',
+  cancelled: 'bg-red-100 text-red-800',
+  completed: 'bg-blue-100 text-blue-800',
+};
+
+const RESET_STATUS_MODAL = {
+  isOpen: false,
+  eventId: null,
+  currentStatus: null,
+  eventTitle: '',
+};
+
 const AdminEventsPage = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState('all'); // all, published, draft, cancelled, completed
+  const [filter, setFilter] = useState('all'); // all, draft, published, cancelled, completed
+  const [statusModal, setStatusModal] = useState(RESET_STATUS_MODAL);
 
-  // Fetch all events
   const fetchEvents = async () => {
     setLoading(true);
-
     try {
-      // Fetch all events (без статус филтър)
       const data = await eventService.getAllEvents({});
-      setEvents(data.events);
+      setEvents(data?.events || []);
     } catch (err) {
       console.error('Грешка при зареждане на събития:', err);
+      toast.error('Грешка при зареждане на събития');
     } finally {
       setLoading(false);
     }
@@ -30,54 +55,80 @@ const AdminEventsPage = () => {
     fetchEvents();
   }, []);
 
-  // Delete event
+  const stats = useMemo(() => {
+    const total = events.length;
+    const published = events.filter((e) => e.status === 'published').length;
+    const draft = events.filter((e) => e.status === 'draft').length;
+    const cancelled = events.filter((e) => e.status === 'cancelled').length;
+    const completed = events.filter((e) => e.status === 'completed').length;
+
+    return { total, published, draft, cancelled, completed };
+  }, [events]);
+
+  const filteredEvents = useMemo(() => {
+    if (filter === 'all') return events;
+    return events.filter((e) => e.status === filter);
+  }, [events, filter]);
+
   const handleDeleteEvent = async (eventId, eventTitle) => {
-    if (
-      !confirm(
-        `Сигурни ли сте, че искате да изтриете "${eventTitle}"?\n\nТова действие е необратимо!`
-      )
-    ) {
-      return;
-    }
+    if (!confirm(`Сигурни ли сте, че искате да изтриете "${eventTitle}"?`)) return;
+
+    const promise = eventService.deleteEvent(eventId);
+
+    toast.promise(promise, {
+      loading: 'Изтриване...',
+      success: 'Събитието е изтрито успешно!',
+      error: (err) =>
+        err.response?.data?.message || 'Грешка при изтриване на събитие',
+    });
 
     try {
-      await eventService.deleteEvent(eventId);
-      alert('Събитието е изтрито успешно!');
-      fetchEvents(); // Refresh
-    } catch (err) {
-      alert(err.response?.data?.message || 'Грешка при изтриване на събитие');
+      await promise;
+      fetchEvents();
+    } catch {
+      // handled by toast.promise
     }
   };
 
-  // Change status
-  const handleChangeStatus = async (eventId, currentStatus) => {
-    const statuses = ['draft', 'published', 'cancelled', 'completed'];
-    const newStatus = prompt(
-      `Промяна на статус за събитие ${eventId}\n\nВъведете нов статус: draft, published, cancelled или completed`,
-      currentStatus
-    );
+  const openStatusModal = (eventId, currentStatus, eventTitle) => {
+    setStatusModal({
+      isOpen: true,
+      eventId,
+      currentStatus,
+      eventTitle,
+    });
+  };
 
-    if (!newStatus || !statuses.includes(newStatus.toLowerCase())) {
-      alert('Невалиден статус!');
+  const closeStatusModal = () => {
+    setStatusModal(RESET_STATUS_MODAL);
+  };
+
+  const handleChangeStatus = async (newStatus) => {
+    const normalized = newStatus?.toLowerCase?.().trim?.() ?? newStatus;
+
+    if (!STATUS_OPTIONS.includes(normalized)) {
+      toast.error('Невалиден статус');
       return;
     }
 
-    if (newStatus.toLowerCase() === currentStatus) {
-      return; // Няма промяна
-    }
+    const promise = eventService.updateEvent(statusModal.eventId, {
+      status: normalized,
+    });
+
+    toast.promise(promise, {
+      loading: 'Промяна на статус...',
+      success: 'Статусът е променен успешно! ✅',
+      error: (err) => err.response?.data?.message || 'Грешка при промяна на статус',
+    });
 
     try {
-      await eventService.updateEvent(eventId, { status: newStatus.toLowerCase() });
-      alert('Статусът е променен успешно! ✅');
-      fetchEvents(); // Refresh
-    } catch (err) {
-      alert(err.response?.data?.message || 'Грешка при промяна на статус');
+      await promise;
+      closeStatusModal();
+      fetchEvents();
+    } catch {
+      // handled by toast.promise
     }
   };
-
-  // Filter events
-  const filteredEvents =
-    filter === 'all' ? events : events.filter((e) => e.status === filter);
 
   if (loading) {
     return (
@@ -86,14 +137,7 @@ const AdminEventsPage = () => {
       </div>
     );
   }
-
-  const statusColors = {
-    draft: 'bg-yellow-100 text-yellow-800',
-    published: 'bg-green-100 text-green-800',
-    cancelled: 'bg-red-100 text-red-800',
-    completed: 'bg-blue-100 text-blue-800',
-  };
-
+  
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -102,28 +146,16 @@ const AdminEventsPage = () => {
           to="/admin"
           className="inline-flex items-center text-primary-600 hover:text-primary-700 mb-6 font-medium"
         >
-          <svg
-            className="w-5 h-5 mr-2"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M15 19l-7-7 7-7"
-            />
+          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
           Назад към Admin Panel
         </Link>
 
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">
-            Управление на събития
-          </h1>
-          <p className="text-gray-600">Общо {events.length} събития в системата</p>
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">Управление на събития</h1>
+          <p className="text-gray-600">Общо {stats.total} събития в системата</p>
         </div>
 
         {/* Stats Cards */}
@@ -131,34 +163,28 @@ const AdminEventsPage = () => {
           <Card className="p-6">
             <div className="text-center">
               <p className="text-sm text-gray-600 mb-1">Всички</p>
-              <p className="text-3xl font-bold text-gray-900">{events.length}</p>
+              <p className="text-3xl font-bold text-gray-900">{stats.total}</p>
             </div>
           </Card>
 
           <Card className="p-6">
             <div className="text-center">
               <p className="text-sm text-gray-600 mb-1">Публикувани</p>
-              <p className="text-3xl font-bold text-green-600">
-                {events.filter((e) => e.status === 'published').length}
-              </p>
+              <p className="text-3xl font-bold text-green-600">{stats.published}</p>
             </div>
           </Card>
 
           <Card className="p-6">
             <div className="text-center">
               <p className="text-sm text-gray-600 mb-1">Чернови</p>
-              <p className="text-3xl font-bold text-yellow-600">
-                {events.filter((e) => e.status === 'draft').length}
-              </p>
+              <p className="text-3xl font-bold text-yellow-600">{stats.draft}</p>
             </div>
           </Card>
 
           <Card className="p-6">
             <div className="text-center">
               <p className="text-sm text-gray-600 mb-1">Отменени</p>
-              <p className="text-3xl font-bold text-red-600">
-                {events.filter((e) => e.status === 'cancelled').length}
-              </p>
+              <p className="text-3xl font-bold text-red-600">{stats.cancelled}</p>
             </div>
           </Card>
         </div>
@@ -174,8 +200,9 @@ const AdminEventsPage = () => {
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
-              Всички ({events.length})
+              Всички ({stats.total})
             </button>
+
             <button
               onClick={() => setFilter('published')}
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
@@ -184,8 +211,9 @@ const AdminEventsPage = () => {
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
-              ✓ Публикувани ({events.filter((e) => e.status === 'published').length})
+              ✓ Публикувани ({stats.published})
             </button>
+
             <button
               onClick={() => setFilter('draft')}
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
@@ -194,8 +222,9 @@ const AdminEventsPage = () => {
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
-              📝 Чернови ({events.filter((e) => e.status === 'draft').length})
+              📝 Чернови ({stats.draft})
             </button>
+
             <button
               onClick={() => setFilter('cancelled')}
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
@@ -204,8 +233,9 @@ const AdminEventsPage = () => {
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
-              ✗ Отменени ({events.filter((e) => e.status === 'cancelled').length})
+              ✗ Отменени ({stats.cancelled})
             </button>
+
             <button
               onClick={() => setFilter('completed')}
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
@@ -214,7 +244,7 @@ const AdminEventsPage = () => {
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
-              ✓ Завършени ({events.filter((e) => e.status === 'completed').length})
+              ✓ Завършени ({stats.completed})
             </button>
           </div>
         </div>
@@ -245,102 +275,117 @@ const AdminEventsPage = () => {
                   </th>
                 </tr>
               </thead>
+
               <tbody className="bg-white divide-y divide-gray-200">
-                {filteredEvents.map((event) => (
-                  <tr key={event.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4">
-                      <div>
-                        <Link
-                          to={`/events/${event.id}`}
-                          className="text-sm font-medium text-gray-900 hover:text-primary-600"
-                        >
-                          {event.title}
-                        </Link>
-                        <div className="text-sm text-gray-500">
-                          📍 {event.location}
-                        </div>
-                        {event.category && (
-                          <span
-                            className={`inline-block mt-1 px-2 py-0.5 rounded text-xs font-semibold ${getCategoryColor(
-                              event.category
-                            )}`}
+                {filteredEvents.map((event) => {
+                  const organizerName = `${event.users?.first_name || ''} ${event.users?.last_name || ''}`.trim();
+                  const organizerEmail = event.users?.email || '';
+
+                  return (
+                    <tr key={event.id} className="hover:bg-gray-50">
+                      <td className="px-6 py-4">
+                        <div>
+                          <Link
+                            to={`/events/${event.id}`}
+                            className="text-sm font-medium text-gray-900 hover:text-primary-600"
                           >
-                            {event.category}
-                          </span>
-                        )}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">
-                        {event.users?.first_name} {event.users?.last_name}
-                      </div>
-                      <div className="text-sm text-gray-500">
-                        {event.users?.email}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">
-                        {new Date(event.event_date).toLocaleDateString('bg-BG')}
-                      </div>
-                      <div className="text-sm text-gray-500">
-                        {new Date(event.event_date).toLocaleTimeString('bg-BG', {
-                          hour: '2-digit',
-                          minute: '2-digit',
-                        })}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span
-                        className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          statusColors[event.status]
-                        }`}
-                      >
-                        {event.status === 'draft' && 'Чернова'}
-                        {event.status === 'published' && 'Публикувано'}
-                        {event.status === 'cancelled' && 'Отменено'}
-                        {event.status === 'completed' && 'Завършено'}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {event.participantsCount || 0}
-                      {event.max_participants && ` / ${event.max_participants}`}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <div className="flex justify-end gap-2">
-                        <Link to={`/events/${event.id}`}>
-                          <Button variant="outline" size="sm">
-                            👁️
+                            {event.title}
+                          </Link>
+
+                          <div className="text-sm text-gray-500">📍 {event.location}</div>
+
+                          {event.category && (
+                            <span
+                              className={`inline-block mt-1 px-2 py-0.5 rounded text-xs font-semibold ${getCategoryColor(
+                                event.category
+                              )}`}
+                            >
+                              {event.category}
+                            </span>
+                          )}
+                        </div>
+                      </td>
+
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">{organizerName || '—'}</div>
+                        <div className="text-sm text-gray-500">{organizerEmail || '—'}</div>
+                      </td>
+
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">
+                          {event.event_date ? new Date(event.event_date).toLocaleDateString('bg-BG') : '—'}
+                        </div>
+                        <div className="text-sm text-gray-500">
+                          {event.event_date
+                            ? new Date(event.event_date).toLocaleTimeString('bg-BG', {
+                                hour: '2-digit',
+                                minute: '2-digit',
+                              })
+                            : '—'}
+                        </div>
+                      </td>
+
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span
+                          className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                            STATUS_COLORS[event.status] || 'bg-gray-100 text-gray-800'
+                          }`}
+                        >
+                          {STATUS_LABELS[event.status] || event.status}
+                        </span>
+                      </td>
+
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {event.participantsCount || 0}
+                        {event.max_participants ? ` / ${event.max_participants}` : ''}
+                      </td>
+
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <div className="flex justify-end gap-2">
+                          <Link to={`/events/${event.id}`}>
+                            <Button variant="outline" size="sm">👁️</Button>
+                          </Link>
+
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => openStatusModal(event.id, event.status, event.title)}
+                            title="Промени статус"
+                          >
+                            🔄
                           </Button>
-                        </Link>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleChangeStatus(event.id, event.status)}
-                        >
-                          🔄
-                        </Button>
-                        <Button
-                          variant="danger"
-                          size="sm"
-                          onClick={() => handleDeleteEvent(event.id, event.title)}
-                        >
-                          🗑️
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+
+                          <Button
+                            variant="danger"
+                            size="sm"
+                            onClick={() => handleDeleteEvent(event.id, event.title)}
+                            title="Изтрий"
+                          >
+                            🗑️
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
 
           {filteredEvents.length === 0 && (
-            <div className="p-8 text-center text-gray-600">
-              Няма събития с този филтър
-            </div>
+            <div className="p-8 text-center text-gray-600">Няма събития с този филтър</div>
           )}
         </Card>
       </div>
+
+      {/* Status Change Modal */}
+      <StatusChangeModal
+        isOpen={statusModal.isOpen}
+        onClose={closeStatusModal}
+        currentStatus={statusModal.currentStatus}
+        eventTitle={statusModal.eventTitle}
+        onConfirm={handleChangeStatus}
+      />
     </div>
   );
 };

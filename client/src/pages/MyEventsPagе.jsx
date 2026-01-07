@@ -6,6 +6,7 @@ import EventCard from '../components/events/EventCard';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
 import { formatDateTime, getDaysUntil } from '../utils/helpers';
+import { showSuccess, showError } from '../utils/toast';
 
 const MyEventsPage = () => {
   const [registrations, setRegistrations] = useState([]);
@@ -41,10 +42,10 @@ const MyEventsPage = () => {
 
     try {
       await eventService.unregisterFromEvent(eventId);
-      alert('Успешно се отписахте от събитието');
+      showSuccess('Успешно се отписахте от събитието');
       fetchRegistrations(); // Refresh
     } catch (err) {
-      alert(err.response?.data?.message || 'Грешка при отписване');
+      showError(err.response?.data?.message || 'Грешка при отписване');
     }
   };
 
@@ -99,7 +100,7 @@ const MyEventsPage = () => {
             Моите събития
           </h1>
           <p className="text-gray-600">
-            Управлявайте събитията за които сте записан
+            Преглеждайте събитията, за които сте записан
           </p>
         </div>
 
