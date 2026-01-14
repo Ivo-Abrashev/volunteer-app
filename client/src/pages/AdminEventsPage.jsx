@@ -139,7 +139,7 @@ const AdminEventsPage = () => {
   }
   
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 py-8 sm:py-10 lg:py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Back button */}
         <Link
@@ -153,13 +153,13 @@ const AdminEventsPage = () => {
         </Link>
 
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Управление на събития</h1>
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">Управление на събития</h1>
           <p className="text-gray-600">Общо {stats.total} събития в системата</p>
         </div>
 
         {/* Stats Cards */}
-        <div className="grid md:grid-cols-4 gap-6 mb-8">
+        <div className="grid md:grid-cols-4 gap-6 mb-6 sm:mb-8">
           <Card className="p-6">
             <div className="text-center">
               <p className="text-sm text-gray-600 mb-1">Всички</p>
@@ -190,7 +190,7 @@ const AdminEventsPage = () => {
         </div>
 
         {/* Filters */}
-        <div className="bg-white rounded-lg shadow-md p-4 mb-8">
+        <div className="bg-white rounded-lg shadow-md p-4 mb-6 sm:mb-8">
           <div className="flex flex-wrap gap-2">
             <button
               onClick={() => setFilter('all')}
@@ -391,3 +391,4 @@ const AdminEventsPage = () => {
 };
 
 export default AdminEventsPage;
+

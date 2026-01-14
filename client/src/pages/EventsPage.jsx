@@ -125,11 +125,11 @@ const EventsPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 py-8 sm:py-10 lg:py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
             Доброволчески събития
           </h1>
           <p className="text-gray-600">
@@ -138,10 +138,10 @@ const EventsPage = () => {
         </div>
 
         {/* Filters */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+        <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-6 sm:mb-8">
           {/* Search */}
-          <form onSubmit={handleSearch} className="mb-4">
-            <div className="flex gap-2">
+          <form onSubmit={handleSearch} className="mb-4">         
+            <div className="flex flex-col sm:flex-row gap-2">
               <input
                 type="text"
                 name="search"
@@ -205,7 +205,7 @@ const EventsPage = () => {
                 <div className="mb-4 text-gray-600">
                   Намерени {events.length} {events.length === 1 ? 'събитие' : 'събития'}
                 </div>
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                   {events.map((event) => {
                     const isRegistered = myRegistrations.includes(event.id);
                     

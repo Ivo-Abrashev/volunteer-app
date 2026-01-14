@@ -10,10 +10,10 @@ const HomePage = () => {
       <section className="relative bg-gradient-to-r from-primary-600 to-secondary-600 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-5xl font-bold mb-6 animate-fade-in">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 animate-fade-in">
               Промени света с доброволчество! 🌟
             </h1>
-            <p className="text-xl mb-8 text-primary-100 max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg lg:text-base sm:text-lg lg:text-xl mb-8 text-primary-100 max-w-2xl mx-auto">
               Присъедини се към хиляди доброволци в България. Намери каузи които те вдъхновяват
               и направи разликата в твоята общност.
             </p>
@@ -43,7 +43,7 @@ const HomePage = () => {
       {/* Features Section */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">
+          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-12 text-gray-900">
             Защо да станеш доброволец?
           </h2>
 
@@ -93,7 +93,7 @@ const HomePage = () => {
       {/* Categories Section */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">
+          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-12 text-gray-900">
             Категории събития
           </h2>
 
@@ -122,8 +122,8 @@ const HomePage = () => {
       {/* CTA Section */}
       <section className="bg-gradient-to-r from-primary-600 to-secondary-600 text-white py-16">
         <div className="max-w-4xl mx-auto text-center px-4">
-          <h2 className="text-3xl font-bold mb-4">Готов да започнеш?</h2>
-          <p className="text-xl mb-8 text-primary-100">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4">Готов да започнеш?</h2>
+          <p className="text-base sm:text-lg lg:text-xl mb-8 text-primary-100">
             Създай акаунт и стани част от нашата доброволческа общност още днес!
           </p>
           <Link to="/register">

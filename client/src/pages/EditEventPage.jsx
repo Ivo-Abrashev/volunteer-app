@@ -158,7 +158,7 @@ const EditEventPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 py-8 sm:py-10 lg:py-12">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Back button */}
         <Link
@@ -182,8 +182,8 @@ const EditEventPage = () => {
         </Link>
 
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
             Редактирай събитие
           </h1>
           <p className="text-gray-600">
@@ -192,7 +192,7 @@ const EditEventPage = () => {
         </div>
 
         {/* Form Card */}
-        <Card className="p-8">
+        <Card className="p-5 sm:p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* General Error */}
             {errors.general && (
@@ -349,7 +349,7 @@ const EditEventPage = () => {
             )}
 
             {/* Submit Buttons */}
-            <div className="flex gap-3">
+            <div className="flex flex-col sm:flex-row gap-3">
               <Button
                 type="submit"
                 variant="primary"
@@ -377,7 +377,7 @@ const EditEventPage = () => {
         </Card>
 
         {/* Quick Actions */}
-        <div className="mt-6 flex gap-3">
+        <div className="mt-6 flex flex-col sm:flex-row gap-3">
           <Link to={`/events/${id}`} className="flex-1">
             <Button variant="outline" size="md" fullWidth>
               👁️ Преглед на събитието

@@ -1,4 +1,5 @@
-// src/components/common/Navbar.jsx
+﻿// src/components/common/Navbar.jsx
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import Button from './Button';
@@ -6,6 +7,7 @@ import Button from './Button';
 const Navbar = () => {
   const { user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -122,7 +124,13 @@ const Navbar = () => {
 
           {/* Mobile Menu Button */}
           <div className="md:hidden">
-            <button className="text-gray-700 hover:text-primary-600">
+            <button
+              type="button"
+              className="text-gray-700 hover:text-primary-600"
+              aria-label="Toggle menu"
+              aria-expanded={mobileOpen}
+              onClick={() => setMobileOpen((open) => !open)}
+            >
               <svg
                 className="w-6 h-6"
                 fill="none"
@@ -140,6 +148,107 @@ const Navbar = () => {
           </div>
         </div>
       </div>
+
+      {mobileOpen && (
+        <div className="md:hidden border-t border-gray-100 bg-white">
+          <div className="px-4 py-3 space-y-2">
+            <Link
+              to="/"
+              className="block text-gray-700 hover:text-primary-600 font-medium"
+              onClick={() => setMobileOpen(false)}
+            >
+              Начало
+            </Link>
+            <Link
+              to="/events"
+              className="block text-gray-700 hover:text-primary-600 font-medium"
+              onClick={() => setMobileOpen(false)}
+            >
+              Събития
+            </Link>
+
+            {isAuthenticated() ? (
+              <>
+                {user?.role === 'user' && (
+                  <Link
+                    to="/my-events"
+                    className="block text-gray-700 hover:text-primary-600 font-medium"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    Моите събития
+                  </Link>
+                )}
+
+                {user?.role === 'organizer' && (
+                  <>
+                    <Link
+                      to="/my-events"
+                      className="block text-gray-700 hover:text-primary-600 font-medium"
+                      onClick={() => setMobileOpen(false)}
+                    >
+                      Моите събития
+                    </Link>
+                    <Link
+                      to="/dashboard"
+                      className="block text-gray-700 hover:text-primary-600 font-medium"
+                      onClick={() => setMobileOpen(false)}
+                    >
+                      Dashboard
+                    </Link>
+                  </>
+                )}
+
+                {user?.role === 'admin' && (
+                  <Link
+                    to="/admin"
+                    className="block text-gray-700 hover:text-primary-600 font-medium"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    Admin Panel
+                  </Link>
+                )}
+
+                <Link
+                  to="/profile"
+                  className="flex items-center space-x-2 text-gray-700 hover:text-primary-600"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-r from-primary-500 to-secondary-500 flex items-center justify-center text-white font-semibold">
+                    {user?.firstName?.[0]}{user?.lastName?.[0]}
+                  </div>
+                  <span className="font-medium">
+                    {user?.firstName} {user?.lastName}
+                  </span>
+                </Link>
+
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setMobileOpen(false);
+                    handleLogout();
+                  }}
+                >
+                  Изход
+                </Button>
+              </>
+            ) : (
+              <div className="flex flex-col gap-2">
+                <Link to="/login" onClick={() => setMobileOpen(false)}>
+                  <Button variant="outline" size="sm" fullWidth>
+                    Вход
+                  </Button>
+                </Link>
+                <Link to="/register" onClick={() => setMobileOpen(false)}>
+                  <Button variant="primary" size="sm" fullWidth>
+                    Регистрация
+                  </Button>
+                </Link>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </nav>
   );
 };

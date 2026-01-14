@@ -97,11 +97,11 @@ const DashboardPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 py-8 sm:py-10 lg:py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
             Organizer Dashboard
           </h1>
           <p className="text-gray-600">
@@ -110,7 +110,7 @@ const DashboardPage = () => {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid md:grid-cols-4 gap-6 mb-8">
+        <div className="grid md:grid-cols-4 gap-6 mb-6 sm:mb-8">
           <Card className="p-6">
             <div className="flex items-center">
               <div className="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center mr-4">
@@ -163,7 +163,7 @@ const DashboardPage = () => {
         </div>
 
         {/* Create Event Button */}
-        <div className="mb-8">
+        <div className="mb-6 sm:mb-8">
           <Button
             variant="primary"
             size="lg"
@@ -183,7 +183,7 @@ const DashboardPage = () => {
         {/* Events List */}
         {myEvents.length > 0 ? (
           <div className="space-y-4">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4">
               Моите събития ({totalEvents})
             </h2>
 

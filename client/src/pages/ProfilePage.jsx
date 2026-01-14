@@ -190,17 +190,17 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 py-8 sm:py-10 lg:py-12 sm:py-10 lg:py-12">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center mb-4">
-            <div className="w-20 h-20 rounded-full bg-gradient-to-r from-primary-500 to-secondary-500 flex items-center justify-center text-white font-bold text-3xl mr-6">
+          <div className="flex flex-col sm:flex-row sm:items-center mb-4 gap-4 sm:gap-6">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-r from-primary-500 to-secondary-500 flex items-center justify-center text-white font-bold text-3xl sm:mr-6">
               {user?.firstName?.[0]}
               {user?.lastName?.[0]}
             </div>
             <div>
-              <h1 className="text-4xl font-bold text-gray-900">
+              <h1 className="text-3xl sm:text-3xl sm:text-4xl font-bold text-gray-900">
                 {user?.firstName} {user?.lastName}
               </h1>
               <div className="flex items-center gap-3 mt-2">
@@ -220,7 +220,7 @@ const ProfilePage = () => {
         {/* Tabs */}
         <div className="mb-6">
           <div className="border-b border-gray-200">
-            <nav className="-mb-px flex space-x-8">
+            <nav className="-mb-px flex flex-wrap gap-4">
               <button
                 onClick={() => setActiveTab('profile')}
                 className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
@@ -257,7 +257,7 @@ const ProfilePage = () => {
 
         {/* Profile Tab */}
         {activeTab === 'profile' && (
-          <Card className="p-8">
+          <Card className="p-5 sm:p-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">
               Редактирай профил
             </h2>
@@ -339,7 +339,7 @@ const ProfilePage = () => {
 
         {/* Password Tab */}
         {activeTab === 'password' && (
-          <Card className="p-8">
+          <Card className="p-5 sm:p-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">
               Промяна на парола
             </h2>
@@ -402,7 +402,7 @@ const ProfilePage = () => {
 
         {/* Danger Zone Tab */}
         {activeTab === 'danger' && (
-          <Card className="p-8 border-2 border-red-200">
+          <Card className="p-5 sm:p-8 border-2 border-red-200">
             <h2 className="text-2xl font-bold text-red-600 mb-2">Danger Zone</h2>
             <p className="text-gray-600 mb-6">
               Необратими действия. Моля бъдете внимателни.
@@ -444,3 +444,4 @@ const ProfilePage = () => {
 };
 
 export default ProfilePage;
+

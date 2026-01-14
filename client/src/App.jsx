@@ -1,4 +1,4 @@
-// src/App.jsx
+﻿// src/App.jsx
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { useAuth } from './hooks/useAuth';
@@ -7,6 +7,8 @@ import CreateEventPage from './pages/CreateEventPage';
 import AdminUsersPage from './pages/AdminUsersPage';
 import AdminEventsPage from './pages/AdminEventsPage';
 import AdminStatisticsPage from './pages/AdminStatisticsPage';
+import VerifyPendingPage from './pages/VerifyPendingPage';
+import VerifyEmailPage from './pages/VerifyEmailPage';
 
 // Layout
 import Navbar from './components/common/Navbar';
@@ -86,6 +88,8 @@ function AppContent() {
           <Route path="/events/:id" element={<EventDetailsPage />} />  {/* НОВО! */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/verify-pending" element={<VerifyPendingPage />} />
+          <Route path="/verify-email" element={<VerifyEmailPage />} />
           {/* Protected Routes - All authenticated users */}
           <Route
             path="/profile"

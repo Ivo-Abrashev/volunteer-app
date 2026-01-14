@@ -89,7 +89,7 @@ const RegisterPage = () => {
     const result = await register(registerData);
 
     if (result.success) {
-      navigate('/events');
+      navigate('/verify-pending');
     } else {
       setErrors({ general: result.error });
     }
@@ -102,18 +102,18 @@ const RegisterPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-50 to-secondary-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full">
+      <div className="max-w-sm sm:max-w-md w-full">
         {/* Header */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-6 sm:mb-8">
           <div className="inline-block bg-gradient-to-r from-primary-600 to-secondary-600 text-white w-16 h-16 rounded-full flex items-center justify-center font-bold text-2xl mb-4">
             V
           </div>
-          <h2 className="text-3xl font-bold text-gray-900">Създай акаунт</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">Създай акаунт</h2>
           <p className="mt-2 text-gray-600">Присъедини се към нашата общност</p>
         </div>
 
         {/* Register Card */}
-        <Card className="p-8">
+        <Card className="p-6 sm:p-8">
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* General Error */}
             {errors.general && (
@@ -123,7 +123,7 @@ const RegisterPage = () => {
             )}
 
             {/* First Name & Last Name */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Input
                 label="Име"
                 type="text"
@@ -261,3 +261,4 @@ const RegisterPage = () => {
 };
 
 export default RegisterPage;
+

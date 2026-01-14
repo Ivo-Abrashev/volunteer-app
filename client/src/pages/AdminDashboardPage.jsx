@@ -67,11 +67,11 @@ const AdminDashboardPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 py-8 sm:py-10 lg:py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
             👑 Admin Panel
           </h1>
           <p className="text-gray-600">
@@ -80,7 +80,7 @@ const AdminDashboardPage = () => {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid md:grid-cols-4 gap-6 mb-8">
+        <div className="grid md:grid-cols-4 gap-6 mb-6 sm:mb-8">
           <Card className="p-6 bg-gradient-to-br from-blue-500 to-blue-600 text-white">
             <div className="flex items-center justify-between">
               <div>
@@ -123,7 +123,7 @@ const AdminDashboardPage = () => {
         </div>
 
         {/* Quick Actions */}
-        <div className="grid md:grid-cols-3 gap-6 mb-8">
+        <div className="grid md:grid-cols-3 gap-6 mb-6 sm:mb-8">
           <Link to="/admin/users">
             <Card
               hover

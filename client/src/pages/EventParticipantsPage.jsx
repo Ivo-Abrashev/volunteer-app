@@ -86,7 +86,7 @@ const EventParticipantsPage = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 py-8 sm:py-10 lg:py-12">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Back button */}
         <Link
@@ -110,15 +110,15 @@ const EventParticipantsPage = () => {
         </Link>
 
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
             Участници на събитието
           </h1>
           <p className="text-gray-600 text-lg">"{data.event.title}"</p>
         </div>
 
         {/* Stats Cards */}
-        <div className="grid md:grid-cols-4 gap-6 mb-8">
+        <div className="grid md:grid-cols-4 gap-6 mb-6 sm:mb-8">
           <Card className="p-6">
             <div className="text-center">
               <p className="text-sm text-gray-600 mb-1">Общо</p>
@@ -157,7 +157,7 @@ const EventParticipantsPage = () => {
         </div>
 
         {/* Confirmed Participants */}
-        <div className="mb-8">
+        <div className="mb-6 sm:mb-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">
             Записани участници ({confirmedParticipants.length})
           </h2>
@@ -166,8 +166,8 @@ const EventParticipantsPage = () => {
             <div className="space-y-3">
               {confirmedParticipants.map((participant) => (
                 <Card key={participant.id} className="p-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center flex-1">
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center flex-1 gap-4">
                       {/* Avatar */}
                       <div className="w-12 h-12 rounded-full bg-gradient-to-r from-primary-500 to-secondary-500 flex items-center justify-center text-white font-semibold mr-4">
                         {participant.users.first_name[0]}
@@ -191,7 +191,7 @@ const EventParticipantsPage = () => {
                       </div>
 
                       {/* Registration Date */}
-                      <div className="text-right mr-4">
+                      <div className="text-left sm:text-right sm:mr-4">
                         <p className="text-sm text-gray-600">Записан на</p>
                         <p className="text-sm font-medium text-gray-900">
                           {new Date(
@@ -213,7 +213,7 @@ const EventParticipantsPage = () => {
                     </div>
 
                     {/* Actions */}
-                    <div className="ml-4 flex gap-2">
+                    <div className="ml-0 md:ml-4 flex flex-wrap gap-2">
                       {!participant.attended ? (
                         <Button
                           variant="primary"
@@ -282,7 +282,7 @@ const EventParticipantsPage = () => {
         )}
 
         {/* Quick Actions */}
-        <div className="mt-8 flex gap-3">
+        <div className="mt-8 flex flex-col sm:flex-row gap-3">
           <Link to={`/events/${id}`} className="flex-1">
             <Button variant="outline" fullWidth>
               👁️ Преглед на събитието

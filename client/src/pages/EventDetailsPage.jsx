@@ -134,7 +134,7 @@ const EventDetailsPage = () => {
   const isPast = new Date(event.event_date) < new Date();
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 py-8 sm:py-10 lg:py-12">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Back button */}
         <Link
@@ -162,7 +162,7 @@ const EventDetailsPage = () => {
           <div className="lg:col-span-2">
             <Card className="overflow-hidden">
               {/* Hero Image */}
-              <div className="h-64 bg-gradient-to-r from-primary-400 to-secondary-400 relative">
+              <div className="h-48 sm:h-64 bg-gradient-to-r from-primary-400 to-secondary-400 relative">
                 {event.image_url ? (
                   <img
                     src={event.image_url}
@@ -195,9 +195,9 @@ const EventDetailsPage = () => {
               </div>
 
               {/* Content */}
-            <div className="p-8">
+            <div className="p-5 sm:p-8">
                 {/* Title */}
-                <h1 className="text-4xl font-bold text-gray-900 mb-4">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4">
                   {event.title}
                 </h1>
 
@@ -223,7 +223,7 @@ const EventDetailsPage = () => {
 
                 {/* Description */}
                 <div className="prose max-w-none mb-8">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-3">
+                  <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3">
                     За събитието
                   </h2>
                   <p className="text-gray-700 leading-relaxed whitespace-pre-line">
@@ -278,7 +278,7 @@ const EventDetailsPage = () => {
                 {(user?.role === 'organizer' || user?.role === 'admin') &&
                   event.created_by === user?.id && (
                     <div className="mt-8">
-                      <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                      <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4">
                         Записани участници ({confirmedRegistrations})
                       </h2>
                       {event.registrations && event.registrations.length > 0 ? (
@@ -451,7 +451,7 @@ const EventDetailsPage = () => {
                 <h3 className="text-lg font-bold text-gray-900 mb-3">
                   Сподели
                 </h3>
-                <div className="flex gap-2">
+                <div className="flex flex-col sm:flex-row gap-2">
                   
                   <a href="https://www.facebook.com/sharer/sharer.php?u=https://yourapp.com/events/{event.id}" target="_blank" rel="noopener noreferrer" className="flex-1">
                     <button className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">

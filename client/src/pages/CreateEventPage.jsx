@@ -97,7 +97,7 @@ const CreateEventPage = () => {
   const categories = ['екология', 'образование', 'социални', 'култура'];
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 py-8 sm:py-10 lg:py-12">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Back button */}
         <Link
@@ -121,8 +121,8 @@ const CreateEventPage = () => {
         </Link>
 
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
             Създай ново събитие
           </h1>
           <p className="text-gray-600">
@@ -131,7 +131,7 @@ const CreateEventPage = () => {
         </div>
 
         {/* Form Card */}
-        <Card className="p-8">
+        <Card className="p-5 sm:p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* General Error */}
             {errors.general && (
@@ -151,6 +151,18 @@ const CreateEventPage = () => {
               placeholder="напр. Почистване на парк"
               required
             />
+
+            {/* <Input
+              label="Снимка на събитието"
+              type="file"
+              name="image"
+              value={formData.title}
+              onChange={handleChange}
+              error={errors.title}
+              placeholder="напр. Почистване на парк"
+              required
+              
+            /> */}
 
             {/* Description */}
             <div className="mb-4">
@@ -274,7 +286,7 @@ const CreateEventPage = () => {
             </div>
 
             {/* Submit Buttons */}
-            <div className="flex gap-3">
+            <div className="flex flex-col sm:flex-row gap-3">
               <Button
                 type="submit"
                 variant="primary"
