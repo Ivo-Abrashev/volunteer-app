@@ -41,9 +41,25 @@ const EventCard = ({
   };
 
   const status = statusBadge[event.status] || statusBadge.draft;
+  const descriptionPreview = (() => {
+    const description = event.description || '';
+    const maxLength = 180;
+
+    if (description.length <= maxLength) {
+      return description;
+    }
+
+    return `${description.slice(0, maxLength).trim()}...`;
+  })();
+  const descriptionClampStyle = {
+    display: '-webkit-box',
+    WebkitLineClamp: 3,
+    WebkitBoxOrient: 'vertical',
+    overflow: 'hidden',
+  };
 
   return (
-    <Card hover className="overflow-hidden">
+    <Card hover className="overflow-hidden flex flex-col h-full">
       {/* Image */}
       <div className="h-48 bg-gradient-to-r from-primary-400 to-secondary-400 relative overflow-hidden">
         {event.image_url ? (
@@ -84,7 +100,7 @@ const EventCard = ({
       </div>
 
       {/* Content */}
-      <div className="p-6">
+      <div className="p-6 flex flex-col flex-1">
         {/* Title */}
         <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-2">
           {event.title}
@@ -99,8 +115,11 @@ const EventCard = ({
         )}
 
         {/* Description */}
-        <p className="text-gray-600 text-sm mb-4 line-clamp-3">
-          {event.description}
+        <p
+          className="text-gray-600 text-sm mb-4 line-clamp-3"
+          style={descriptionClampStyle}
+        >
+          {descriptionPreview}
         </p>
 
         {/* Info */}
@@ -137,7 +156,7 @@ const EventCard = ({
         </div>
 
         {/* Actions */}
-        <div className="flex gap-2">
+        <div className="flex gap-2 mt-auto">
           <Link to={`/events/${event.id}`} className="flex-1">
             <Button variant="outline" size="sm" fullWidth>
               Виж повече

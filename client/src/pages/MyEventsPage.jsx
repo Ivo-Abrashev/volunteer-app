@@ -97,7 +97,7 @@ const MyEventsPage = () => {
         {/* Header */}
         <div className="mb-6 sm:mb-8">
           <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
-            Моите събития
+            Моите участия
           </h1>
           <p className="text-gray-600">
             Преглеждайте събитията, за които сте записан

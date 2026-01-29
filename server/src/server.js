@@ -16,7 +16,8 @@ const authRoutes = require('./routes/authRoutes');
 const eventRoutes = require('./routes/eventRoutes'); 
 const registrationRoutes = require('./routes/registrationRoutes'); 
 const adminRoutes = require('./routes/adminRoutes');
-const userRoutes = require('./routes/userRoutes'); // НОВО!
+const userRoutes = require('./routes/userRoutes');
+const publicRoutes = require('./routes/publicRoutes'); // НОВО!
 
 // Основен route
 app.get('/', (req, res) => {
@@ -30,9 +31,10 @@ app.get('/', (req, res) => {
 // API Routes
 app.use('/api/auth', authRoutes);  // Authentication routes
 app.use('/api/events', eventRoutes); // Event routes
-app.use('/api', registrationRoutes); // Registration routes
 app.use('/api/admin', adminRoutes); // Admin routes
-app.use('/api/users', userRoutes); // НОВО!
+app.use('/api/users', userRoutes);
+app.use('/api/public', publicRoutes); // НОВО!
+app.use('/api', registrationRoutes); // Registration routes
 
 // Тестов route - вземи всички потребители (за debug)
 app.get('/api/users', async (req, res) => {

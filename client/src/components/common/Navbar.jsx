@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import Button from './Button';
+import logo64 from '../../assets/volunity-mark-64.png';
+import logo128 from '../../assets/volunity-mark-128.png';
 
 const Navbar = () => {
   const { user, isAuthenticated, logout } = useAuth();
@@ -20,10 +22,14 @@ const Navbar = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            <div className="bg-gradient-to-r from-primary-600 to-secondary-600 text-white w-10 h-10 rounded-lg flex items-center justify-center font-bold text-xl">
-              V
-            </div>
-            <span className="text-xl font-bold text-gray-900">
+            <img
+              src={logo64}
+              srcSet={`${logo64} 1x, ${logo128} 2x`}
+              alt="Volunity logo"
+              className="w-12 h-12 rounded-lg object-contain"
+              loading="lazy"
+            />
+            <span className="text-xl font-bold text-gray-900 leading-none">
               Volunity<span className="text-primary-600">.bg</span>
             </span>
           </Link>
@@ -52,7 +58,7 @@ const Navbar = () => {
                       to="/my-events"
                       className="text-gray-700 hover:text-primary-600 font-medium transition-colors"
                     >
-                      Моите събития
+                      Моите участия
                     </Link>
                   </>
                 )}
@@ -64,13 +70,13 @@ const Navbar = () => {
                       to="/my-events"
                       className="text-gray-700 hover:text-primary-600 font-medium transition-colors"
                     >
-                      Моите събития
+                      Моите участия 
                     </Link>
                     <Link
                       to="/dashboard"
                       className="text-gray-700 hover:text-primary-600 font-medium transition-colors"
                     >
-                      Dashboard
+                      Организаторски панел
                     </Link>
                   </>
                 )}
@@ -175,7 +181,7 @@ const Navbar = () => {
                     className="block text-gray-700 hover:text-primary-600 font-medium"
                     onClick={() => setMobileOpen(false)}
                   >
-                    Моите събития
+                    Моите участия
                   </Link>
                 )}
 
@@ -186,14 +192,14 @@ const Navbar = () => {
                       className="block text-gray-700 hover:text-primary-600 font-medium"
                       onClick={() => setMobileOpen(false)}
                     >
-                      Моите събития
+                      Моите участия
                     </Link>
                     <Link
                       to="/dashboard"
                       className="block text-gray-700 hover:text-primary-600 font-medium"
                       onClick={() => setMobileOpen(false)}
                     >
-                      Dashboard
+                      Организаторски панел
                     </Link>
                   </>
                 )}

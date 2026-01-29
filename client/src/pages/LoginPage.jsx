@@ -5,6 +5,7 @@ import { useAuth } from '../hooks/useAuth';
 import Input from '../components/common/Input';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
+import logo128 from '../assets/volunity-logo-128.png';
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -59,9 +60,12 @@ const LoginPage = () => {
       <div className="max-w-sm sm:max-w-md w-full">
         {/* Header */}
         <div className="text-center mb-6 sm:mb-8">
-          <div className="inline-block bg-gradient-to-r from-primary-600 to-secondary-600 text-white w-16 h-16 rounded-full flex items-center justify-center font-bold text-2xl mb-4">
-            V
-          </div>
+          <img
+            src={logo128}
+            alt="Volunity logo"
+            className="w-28 h-28 rounded-full object-contain mb-4 mx-auto"
+            loading="lazy"
+          />
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">Добре дошли отново!</h2>
           <p className="mt-2 text-gray-600">Влезте в профила си</p>
         </div>

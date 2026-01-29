@@ -12,6 +12,7 @@ import VerifyEmailPage from './pages/VerifyEmailPage';
 
 // Layout
 import Navbar from './components/common/Navbar';
+import Footer from './components/common/Footer';
 
 // Pages
 import HomePage from './pages/HomePage';
@@ -19,12 +20,12 @@ import EventsPage from './pages/EventsPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import ProfilePage from './pages/ProfilePage';
-import MyEventsPage from './pages/MyEventsPagе';
+import MyEventsPage from './pages/MyEventsPage';
 import DashboardPage from './pages/DashboardPage';
 import AdminDashboardPage from './pages/AdminDashboardPage';
 import EditEventPage from './pages/EditEventPage';
 import EventParticipantsPage from './pages/EventParticipantsPage';
-import { Toaster } from 'react-hot-toast';
+import AppToaster from './components/common/AppToaster';
 
 // Protected Route Component
 const ProtectedRoute = ({ children, allowedRoles = [] }) => {
@@ -52,133 +53,110 @@ const ProtectedRoute = ({ children, allowedRoles = [] }) => {
 function AppContent() {
   return (
     <Router>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 flex flex-col">
         <Navbar />
-        <Toaster
-          position="top-right"
-          reverseOrder={false}
-          toastOptions={{
-          duration: 3000,
-          style: {
-            background: '#363636',
-            color: '#fff',
-            padding: '16px',
-            borderRadius: '8px',
-          },
-          success: {
-            duration: 3000,
-            iconTheme: {
-              primary: '#10b981',
-              secondary: '#fff',
-            },
-          },
-          error: {
-            duration: 4000,
-            iconTheme: {
-              primary: '#ef4444',
-              secondary: '#fff',
-            },
-          },
-        }}
-      />
-        <Routes>
-          {/* Public Routes */}
-          <Route path="/" element={<HomePage />} />
-          <Route path="/events" element={<EventsPage />} />
-          <Route path="/events/:id" element={<EventDetailsPage />} />  {/* НОВО! */}
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/verify-pending" element={<VerifyPendingPage />} />
-          <Route path="/verify-email" element={<VerifyEmailPage />} />
-          {/* Protected Routes - All authenticated users */}
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute>
-                <ProfilePage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/my-events"
-            element={
-              <ProtectedRoute>
-                <MyEventsPage />
-              </ProtectedRoute>
-            }
-          />
+        <AppToaster />
+        <main className="flex-1">
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/" element={<HomePage />} />
+            <Route path="/events" element={<EventsPage />} />
+            <Route path="/events/:id" element={<EventDetailsPage />} />  {/* НОВО! */}
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/verify-pending" element={<VerifyPendingPage />} />
+            <Route path="/verify-email" element={<VerifyEmailPage />} />
+            {/* Protected Routes - All authenticated users */}
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <ProfilePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/my-events"
+              element={
+                <ProtectedRoute>
+                  <MyEventsPage />
+                </ProtectedRoute>
+              }
+            />
 
-          {/* Organizer Routes */}
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute allowedRoles={['organizer', 'admin']}>
-                <DashboardPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/dashboard/create-event"
-            element={
-              <ProtectedRoute allowedRoles={['organizer', 'admin']}>
-                <CreateEventPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/dashboard/events/:id/edit"
-            element={
-              <ProtectedRoute allowedRoles={['organizer', 'admin']}>
-                <EditEventPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/dashboard/events/:id/participants"
-            element={
-              <ProtectedRoute allowedRoles={['organizer', 'admin']}>
-                <EventParticipantsPage />
-              </ProtectedRoute>
-            }
-          />
+            {/* Organizer Routes */}
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute allowedRoles={['organizer', 'admin']}>
+                  <DashboardPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/create-event"
+              element={
+                <ProtectedRoute allowedRoles={['organizer', 'admin']}>
+                  <CreateEventPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/events/:id/edit"
+              element={
+                <ProtectedRoute allowedRoles={['organizer', 'admin']}>
+                  <EditEventPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/events/:id/participants"
+              element={
+                <ProtectedRoute allowedRoles={['organizer', 'admin']}>
+                  <EventParticipantsPage />
+                </ProtectedRoute>
+              }
+            />
 
-          {/* Admin Routes */}
-          <Route
-            path="/admin"
-            element={
-              <ProtectedRoute allowedRoles={['admin']}>
-                <AdminDashboardPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin/users"
-            element={
-              <ProtectedRoute allowedRoles={['admin']}>
-                <AdminUsersPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin/events"
-            element={
-              <ProtectedRoute allowedRoles={['admin']}>
-                <AdminEventsPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin/statistics"
-            element={
-              <ProtectedRoute allowedRoles={['admin']}>
-                <AdminStatisticsPage />
-              </ProtectedRoute>
-            }
-          />
+            {/* Admin Routes */}
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <AdminDashboardPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/users"
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <AdminUsersPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/events"
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <AdminEventsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/statistics"
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <AdminStatisticsPage />
+                </ProtectedRoute>
+              }
+            />
 
-          {/* 404 */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+            {/* 404 */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </main>
+        <Footer />
       </div>
     </Router>
   );

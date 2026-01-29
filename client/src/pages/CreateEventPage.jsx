@@ -117,7 +117,7 @@ const CreateEventPage = () => {
               d="M15 19l-7-7 7-7"
             />
           </svg>
-          Назад към Dashboard
+          Назад към Организаторски панел
         </Link>
 
         {/* Header */}

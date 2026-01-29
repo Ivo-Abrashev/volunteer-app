@@ -229,7 +229,7 @@ const ProfilePage = () => {
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
-                👤 Личен профил
+                👤 Лични данни
               </button>
               <button
                 onClick={() => setActiveTab('password')}
@@ -249,7 +249,7 @@ const ProfilePage = () => {
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
-                ⚠️ Danger Zone
+                ⚠️ Изтриване на профил
               </button>
             </nav>
           </div>
@@ -300,7 +300,7 @@ const ProfilePage = () => {
                 value={formData.email}
                 disabled
               />
-              <p className="text-sm text-gray-600 -mt-4">
+              <p className="text-sm text-gray-600 mt-1 mb-4">
                 Email адресът не може да се променя
               </p>
 
