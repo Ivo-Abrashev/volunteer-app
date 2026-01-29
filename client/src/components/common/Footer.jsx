@@ -18,7 +18,7 @@ const Footer = () => {
                   src={logo64}
                   srcSet={`${logo64} 1x, ${logo128} 2x`}
                   alt="Volunity logo"
-                  className="w-14 h-14 rounded-xl object-contain ring-1 ring-gray-200 bg-white"
+                  className="w-24 h-24 rounded-xl object-contain ring-1 ring-gray-200 bg-white"
                   loading="lazy"
                 />
                 <div className="text-sm text-gray-600">

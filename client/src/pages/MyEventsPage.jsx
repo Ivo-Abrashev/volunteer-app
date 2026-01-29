@@ -197,6 +197,8 @@ const MyEventsPage = () => {
           <div className="space-y-6">
             {filteredRegistrations.map((registration) => {
               const event = registration.events;
+
+              const imageUrl = event.image_url || event.imageUrl;
               const isPast = new Date(event.event_date) < new Date();
 
               return (
@@ -204,9 +206,9 @@ const MyEventsPage = () => {
                   <div className="md:flex">
                     {/* Image */}
                     <div className="md:w-64 h-48 md:h-auto bg-gradient-to-r from-primary-400 to-secondary-400 flex items-center justify-center text-white text-6xl">
-                      {event.image_url ? (
+                      {imageUrl ? (
                         <img
-                          src={event.image_url}
+                          src={imageUrl}
                           alt={event.title}
                           className="w-full h-full object-cover"
                         />

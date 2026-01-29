@@ -5,7 +5,6 @@ import { useAuth } from '../hooks/useAuth';
 import Input from '../components/common/Input';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
-import logo128 from '../assets/volunity-logo-128.png';
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
@@ -106,12 +105,6 @@ const RegisterPage = () => {
       <div className="max-w-sm sm:max-w-md w-full">
         {/* Header */}
         <div className="text-center mb-6 sm:mb-8">
-          <img
-            src={logo128}
-            alt="Volunity logo"
-            className="w-28 h-28 rounded-full object-contain mb-4 mx-auto"
-            loading="lazy"
-          />
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">Създай акаунт</h2>
           <p className="mt-2 text-gray-600">Присъедини се към нашата общност</p>
         </div>

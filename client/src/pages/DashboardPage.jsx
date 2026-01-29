@@ -189,6 +189,8 @@ const DashboardPage = () => {
 
             {myEvents.map((event) => {
               const isPast = new Date(event.event_date) < new Date();
+
+              const imageUrl = event.image_url || event.imageUrl;
               const statusColors = {
                 draft: 'bg-yellow-100 text-yellow-800',
                 published: 'bg-green-100 text-green-800',
@@ -201,11 +203,21 @@ const DashboardPage = () => {
                   <div className="md:flex">
                     {/* Image */}
                     <div className="md:w-48 h-32 md:h-auto bg-gradient-to-r from-primary-400 to-secondary-400 flex items-center justify-center text-white text-4xl">
-                      {event.category === 'екология' && '🌍'}
-                      {event.category === 'образование' && '📚'}
-                      {event.category === 'социални' && '🤲'}
-                      {event.category === 'култура' && '🎨'}
-                      {!event.category && '📅'}
+                      {imageUrl ? (
+                        <img
+                          src={imageUrl}
+                          alt={event.title}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <span>
+                          {event.category === 'екология' && '🌍'}
+                          {event.category === 'образование' && '📚'}
+                          {event.category === 'социални' && '🤲'}
+                          {event.category === 'култура' && '🎨'}
+                          {!event.category && '📅'}
+                        </span>
+                      )}
                     </div>
 
                     {/* Content */}
