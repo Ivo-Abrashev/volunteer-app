@@ -282,7 +282,10 @@ const AdminEventsPage = () => {
                   const organizerEmail = event.users?.email || '';
 
                   return (
-                    <tr key={event.id} className="hover:bg-gray-50">
+                    <tr
+                      key={event.id}
+                      className="odd:bg-gray-100 even:bg-white hover:bg-gray-200"
+                    >
                       <td className="px-6 py-4">
                         <div>
                           <Link

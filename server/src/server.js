@@ -4,6 +4,7 @@ const cors = require('cors');
 require('dotenv').config();
 
 const supabase = require('./config/database');
+const { protect, authorize } = require('./middleware/auth');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -36,17 +37,26 @@ app.use('/api/users', userRoutes);
 app.use('/api/public', publicRoutes); // НОВО!
 app.use('/api', registrationRoutes); // Registration routes
 
-// Тестов route - вземи всички потребители (за debug)
-app.get('/api/users', async (req, res) => {
+// Admin-only route — извличане на потребители (пагинирано)
+// Публичният debug route беше премахнат; достъпът е ограничен до администратори
+app.get('/api/users', protect, authorize('admin'), async (req, res) => {
   try {
-    const { data, error } = await supabase
+    const page = Math.max(parseInt(req.query.page, 10) || 1, 1);
+    const limit = Math.min(parseInt(req.query.limit, 10) || 50, 100); // Max 100
+    const offset = (page - 1) * limit;
+
+    const { data, error, count } = await supabase
       .from('users')
-      .select('id, email, first_name, last_name, phone, role, created_at');
-    
+      .select('id, email, first_name, last_name, role, created_at', { count: 'exact' })
+      .range(offset, offset + limit - 1);
+
     if (error) throw error;
-    
+
     res.json({
       success: true,
+      page,
+      limit,
+      total: count ?? data.length,
       count: data.length,
       users: data
     });
@@ -54,7 +64,8 @@ app.get('/api/users', async (req, res) => {
     console.error('Грешка при зареждане на потребители:', error);
     res.status(500).json({
       success: false,
-      error: error.message
+      message: 'Грешка при зареждане на потребители',
+      ...(process.env.NODE_ENV === 'development' ? { error: error.message } : {})
     });
   }
 });

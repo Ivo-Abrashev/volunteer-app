@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Card from '../common/Card';
 import Button from '../common/Button';
 
@@ -9,6 +9,23 @@ const EventCard = ({
   onRegister,
   onUnregister,
 }) => {
+  const navigate = useNavigate();
+
+  const handleCardClick = (e) => {
+    if (e.defaultPrevented) return;
+    const interactive = e.target.closest(
+      'a, button, input, textarea, select, option, label'
+    );
+    if (interactive) return;
+    navigate(`/events/${event.id}`);
+  };
+
+  const handleCardKeyDown = (e) => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    if (e.defaultPrevented) return;
+    e.preventDefault();
+    navigate(`/events/${event.id}`);
+  };
   // Форматиране на дата
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -59,7 +76,14 @@ const EventCard = ({
   };
 
   return (
-    <Card hover className="overflow-hidden flex flex-col h-full">
+    <Card
+      hover
+      onClick={handleCardClick}
+      onKeyDown={handleCardKeyDown}
+      role="link"
+      tabIndex={0}
+      className="overflow-hidden flex flex-col h-full cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
+    >
       {/* Image */}
       <div className="h-48 bg-gradient-to-r from-primary-400 to-secondary-400 relative overflow-hidden">
         {event.image_url ? (
