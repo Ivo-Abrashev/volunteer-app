@@ -179,7 +179,10 @@ const AdminDashboardPage = () => {
             </h2>
             <Card className="divide-y divide-gray-200">
               {recentUsers.map((user) => (
-                <div key={user.id} className="p-4 hover:bg-gray-50">
+                <div
+                  key={user.id}
+                  className="p-4 odd:bg-gray-100 even:bg-white hover:bg-gray-200"
+                >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center">
                       <div className="w-10 h-10 rounded-full bg-gradient-to-r from-primary-500 to-secondary-500 flex items-center justify-center text-white font-semibold mr-3">
@@ -231,7 +234,10 @@ const AdminDashboardPage = () => {
             </h2>
             <Card className="divide-y divide-gray-200">
               {recentEvents.map((event) => (
-                <div key={event.id} className="p-4 hover:bg-gray-50">
+                <div
+                  key={event.id}
+                  className="p-4 odd:bg-gray-100 even:bg-white hover:bg-gray-200"
+                >
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
                       <Link

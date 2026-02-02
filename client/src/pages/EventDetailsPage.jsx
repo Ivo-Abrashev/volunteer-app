@@ -138,7 +138,7 @@ const EventDetailsPage = () => {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Back button */}
         <Link
-          to="/events"
+          to="/my-events"
           className="inline-flex items-center text-primary-600 hover:text-primary-700 mb-6 font-medium"
         >
           <svg
@@ -154,7 +154,7 @@ const EventDetailsPage = () => {
               d="M15 19l-7-7 7-7"
             />
           </svg>
-          Назад към събития
+          Назад към Моите участия
         </Link>
 
         <div className="grid lg:grid-cols-3 gap-8">
