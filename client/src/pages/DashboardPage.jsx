@@ -7,8 +7,7 @@ import { useAuth } from '../hooks/useAuth';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
 import { formatDateTime, getDaysUntil, getCategoryColor } from '../utils/helpers';
-import { showSuccess, showError } from '../utils/toast';
-import toast from 'react-hot-toast';
+import { showSuccess, showError, showPromise } from '../utils/toast';
 
 const DashboardPage = () => {
   const [myEvents, setMyEvents] = useState([]);
@@ -45,7 +44,7 @@ const DashboardPage = () => {
 
     const promise = eventService.deleteEvent(eventId);
 
-    toast.promise(promise, {
+    showPromise(promise, {
       loading: 'Изтриване...',
       success: 'Събитието е изтрито успешно!',
       error: (err) => err.response?.data?.message || 'Грешка при изтриване',
@@ -353,3 +352,5 @@ const DashboardPage = () => {
 };
 
 export default DashboardPage;
+
+

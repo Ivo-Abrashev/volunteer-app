@@ -20,6 +20,7 @@ const CreateEventPage = () => {
     longitude: null,
     location: '',
     eventDate: '',
+    eventTime: '',
     duration: '',
     maxParticipants: '',
     category: '',
@@ -49,10 +50,11 @@ const CreateEventPage = () => {
       newErrors.description = 'Описанието е задължително';
     if (!formData.location) newErrors.location = 'Локацията е задължителна';
     if (!formData.eventDate) newErrors.eventDate = 'Датата е задължителна';
+    if (!formData.eventTime) newErrors.eventTime = 'Часът е задължителен';
 
-    // Провери дали датата е в бъдещето
-    if (formData.eventDate) {
-      const selectedDate = new Date(formData.eventDate);
+    // Провери дали датата и часът са в бъдещето
+    if (formData.eventDate && formData.eventTime) {
+      const selectedDate = new Date(`${formData.eventDate}T${formData.eventTime}`);
       const now = new Date();
       if (selectedDate < now) {
         newErrors.eventDate = 'Датата трябва да е в бъдещето';
@@ -73,8 +75,11 @@ const CreateEventPage = () => {
     setLoading(true);
 
     try {
+      const { eventDate, eventTime, ...rest } = formData;
+      const eventDateTime = `${eventDate}T${eventTime}`;
       const eventData = {
-        ...formData,
+        ...rest,
+        eventDate: eventDateTime,
         duration: formData.duration ? parseInt(formData.duration) : null,
         maxParticipants: formData.maxParticipants
           ? parseInt(formData.maxParticipants)
@@ -223,15 +228,29 @@ const CreateEventPage = () => {
             />
 
             {/* Date & Time */}
-            <Input
-              label="Дата и час"
-              type="datetime-local"
-              name="eventDate"
-              value={formData.eventDate}
-              onChange={handleChange}
-              error={errors.eventDate}
-              required
-            />
+            <div className="grid md:grid-cols-2 gap-4">
+              <Input
+                label="Дата (дд/мм/гггг)"
+                type="date"
+                name="eventDate"
+                value={formData.eventDate}
+                onChange={handleChange}
+                error={errors.eventDate}
+                lang="bg-BG"
+                required
+              />
+              <Input
+                label="Час (24ч формат)"
+                type="time"
+                name="eventTime"
+                value={formData.eventTime}
+                onChange={handleChange}
+                error={errors.eventTime}
+                step="60"
+                lang="bg-BG"
+                required
+              />
+            </div>
 
             {/* Duration & Max Participants */}
             <div className="grid md:grid-cols-2 gap-4">

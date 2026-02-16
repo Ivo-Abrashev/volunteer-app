@@ -5,7 +5,7 @@ import api from '../services/api';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
 import RoleChangeModal from '../components/common/RoleChangeModal';
-import toast from 'react-hot-toast';
+import { showPromise } from '../utils/toast';
 
 const AdminUsersPage = () => {
   const [users, setUsers] = useState([]);
@@ -52,7 +52,7 @@ const AdminUsersPage = () => {
       role: newRole,
     });
 
-    toast.promise(promise, {
+    showPromise(promise, {
       loading: 'Промяна на роля...',
       success: 'Ролята е променена успешно! ✅',
       error: (err) => err.response?.data?.message || 'Грешка при промяна на роля',
@@ -89,7 +89,7 @@ const AdminUsersPage = () => {
 
     const promise = api.delete(`/admin/users/${userId}`);
 
-    toast.promise(promise, {
+    showPromise(promise, {
       loading: 'Изтриване...',
       success: 'Потребителят е изтрит успешно!',
       error: (err) =>
@@ -317,4 +317,6 @@ const AdminUsersPage = () => {
 };
 
 export default AdminUsersPage;
+
+
 

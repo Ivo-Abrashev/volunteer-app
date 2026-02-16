@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import toast from 'react-hot-toast';
+import { showError, showPromise } from '../utils/toast';
 import api from '../services/api';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
@@ -9,11 +9,11 @@ const VerifyPendingPage = () => {
   const [email, setEmail] = useState('');
 
   const handleResend = async () => {
-    if (!email) return toast.error('Въведи имейл');
+    if (!email) return showError('Въведи имейл');
 
     const promise = api.post('/auth/resend-verification', { email });
 
-    toast.promise(promise, {
+    showPromise(promise, {
       loading: 'Изпращане...',
       success: (res) => res.data?.message || 'Изпратихме линк!',
       error: (err) => err.response?.data?.message || 'Грешка при изпращане',
@@ -57,4 +57,6 @@ const VerifyPendingPage = () => {
 };
 
 export default VerifyPendingPage;
+
+
 

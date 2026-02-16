@@ -21,6 +21,7 @@ const EditEventPage = () => {
     description: '',
     location: '',
     eventDate: '',
+    eventTime: '',
     duration: '',
     maxParticipants: '',
     category: '',
@@ -36,9 +37,11 @@ const EditEventPage = () => {
       const data = await eventService.getEventById(id);
       const evt = data.event;
 
-      // Форматирай датата за datetime-local input
+      // Форматирай датата и часа за date/time inputs (локално време)
       const eventDate = new Date(evt.event_date);
-      const formattedDate = eventDate.toISOString().slice(0, 16);
+      const pad2 = (value) => String(value).padStart(2, '0');
+      const formattedDate = `${eventDate.getFullYear()}-${pad2(eventDate.getMonth() + 1)}-${pad2(eventDate.getDate())}`;
+      const formattedTime = `${pad2(eventDate.getHours())}:${pad2(eventDate.getMinutes())}`;
 
       setEvent(evt);
       setFormData({
@@ -48,6 +51,7 @@ const EditEventPage = () => {
         latitude: evt.latitude ?? null,
         longitude: evt.longitude ?? null,
         eventDate: formattedDate,
+        eventTime: formattedTime,
         duration: evt.duration || '',
         maxParticipants: evt.max_participants || '',
         category: evt.category || '',
@@ -90,6 +94,7 @@ const EditEventPage = () => {
       newErrors.description = 'Описанието е задължително';
     if (!formData.location) newErrors.location = 'Локацията е задължителна';
     if (!formData.eventDate) newErrors.eventDate = 'Датата е задължителна';
+    if (!formData.eventTime) newErrors.eventTime = 'Часът е задължителен';
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -105,8 +110,11 @@ const EditEventPage = () => {
     setSaving(true);
 
     try {
+      const { eventDate, eventTime, ...rest } = formData;
+      const eventDateTime = `${eventDate}T${eventTime}`;
       const eventData = {
-        ...formData,
+        ...rest,
+        eventDate: eventDateTime,
         duration: formData.duration ? parseInt(formData.duration) : null,
         maxParticipants: formData.maxParticipants
           ? parseInt(formData.maxParticipants)
@@ -274,15 +282,29 @@ const EditEventPage = () => {
             />
 
             {/* Date & Time */}
-            <Input
-              label="Дата и час"
-              type="datetime-local"
-              name="eventDate"
-              value={formData.eventDate}
-              onChange={handleChange}
-              error={errors.eventDate}
-              required
-            />
+            <div className="grid md:grid-cols-2 gap-4">
+              <Input
+                label="Дата (дд/мм/гггг)"
+                type="date"
+                name="eventDate"
+                value={formData.eventDate}
+                onChange={handleChange}
+                error={errors.eventDate}
+                lang="bg-BG"
+                required
+              />
+              <Input
+                label="Час (24ч формат)"
+                type="time"
+                name="eventTime"
+                value={formData.eventTime}
+                onChange={handleChange}
+                error={errors.eventTime}
+                step="60"
+                lang="bg-BG"
+                required
+              />
+            </div>
 
             {/* Duration & Max Participants */}
             <div className="grid md:grid-cols-2 gap-4">

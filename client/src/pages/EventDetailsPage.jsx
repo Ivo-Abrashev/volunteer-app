@@ -1,4 +1,4 @@
-// src/pages/EventDetailsPage.jsx
+﻿// src/pages/EventDetailsPage.jsx
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import eventService from '../services/eventService';
@@ -7,8 +7,7 @@ import Button from '../components/common/Button';
 import Card from '../components/common/Card';
 import { formatDateTime, getDaysUntil, getCategoryEmoji, getCategoryColor } from '../utils/helpers';
 import MapView from '../components/common/mapView';
-import { showSuccess, showError } from '../utils/toast';
-import toast from 'react-hot-toast';
+import { showSuccess, showError, showPromise } from '../utils/toast';
 
 const EventDetailsPage = () => {
   const { id } = useParams();
@@ -72,13 +71,14 @@ const EventDetailsPage = () => {
   };
 
   // Handle unregister
-  const handleUnregister = async (eventId) => {
+  const handleUnregister = async () => {
     const ok = window.confirm('Сигурни ли сте, че искате да се отпишете?');
     if (!ok) return;
 
-    const promise = eventService.unregisterFromEvent(eventId);
+    setActionLoading(true);
+    const promise = eventService.unregisterFromEvent(id);
 
-    toast.promise(promise, {
+    showPromise(promise, {
       loading: 'Отписване...',
       success: 'Успешно се отписахте ✅',
       error: (err) => err.response?.data?.message || 'Грешка при отписване',
@@ -86,9 +86,11 @@ const EventDetailsPage = () => {
 
     try {
       await promise;
-      // refresh / update state
+      await fetchEvent();
     } catch {
       // error handled by toast.promise
+    } finally {
+      setActionLoading(false);
     }
   };
 
@@ -475,3 +477,5 @@ const EventDetailsPage = () => {
 };
 
 export default EventDetailsPage;
+
+
