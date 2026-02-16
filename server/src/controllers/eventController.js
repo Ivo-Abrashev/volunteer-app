@@ -1,5 +1,6 @@
 // server/src/controllers/eventController.js
 const supabase = require('../config/database');
+const { convertSofiaToUTC } = require('../utils/dateConverterToUTC');
 
 // ВЗЕМИ ВСИЧКИ СЪБИТИЯ (с филтри)
 exports.getAllEvents = async (req, res) => {
@@ -181,6 +182,9 @@ exports.createEvent = async (req, res) => {
         });
       }
     }
+    
+
+    const eventDateUTC = convertSofiaToUTC(eventDate);
 
     // Създай събитието
     const { data: newEvent, error } = await supabase
@@ -194,7 +198,7 @@ exports.createEvent = async (req, res) => {
           location,
           latitude: latitude ?? null,
           longitude: longitude ?? null,
-          event_date: eventDate,
+          event_date:eventDateUTC,
           duration,
           max_participants: maxParticipants,
           category,

@@ -1,13 +1,13 @@
 // src/pages/AdminEventsPage.jsx
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import toast from 'react-hot-toast';
+import { showError, showPromise } from '../utils/toast';
 
 import StatusChangeModal from '../components/common/StatusChangeModal';
 import eventService from '../services/eventService';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
-import { getCategoryColor } from '../utils/helpers';
+import { formatDate, formatTime, getCategoryColor } from '../utils/helpers';
 
 const STATUS_OPTIONS = ['draft', 'published', 'cancelled', 'completed'];
 
@@ -45,7 +45,7 @@ const AdminEventsPage = () => {
       setEvents(data?.events || []);
     } catch (err) {
       console.error('Грешка при зареждане на събития:', err);
-      toast.error('Грешка при зареждане на събития');
+      showError('Грешка при зареждане на събития');
     } finally {
       setLoading(false);
     }
@@ -75,7 +75,7 @@ const AdminEventsPage = () => {
 
     const promise = eventService.deleteEvent(eventId);
 
-    toast.promise(promise, {
+    showPromise(promise, {
       loading: 'Изтриване...',
       success: 'Събитието е изтрито успешно!',
       error: (err) =>
@@ -107,7 +107,7 @@ const AdminEventsPage = () => {
     const normalized = newStatus?.toLowerCase?.().trim?.() ?? newStatus;
 
     if (!STATUS_OPTIONS.includes(normalized)) {
-      toast.error('Невалиден статус');
+      showError('Невалиден статус');
       return;
     }
 
@@ -115,7 +115,7 @@ const AdminEventsPage = () => {
       status: normalized,
     });
 
-    toast.promise(promise, {
+    showPromise(promise, {
       loading: 'Промяна на статус...',
       success: 'Статусът е променен успешно! ✅',
       error: (err) => err.response?.data?.message || 'Грешка при промяна на статус',
@@ -316,14 +316,11 @@ const AdminEventsPage = () => {
 
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-900">
-                          {event.event_date ? new Date(event.event_date).toLocaleDateString('bg-BG') : '—'}
+                          {event.event_date ? formatDate(event.event_date) : '—'}
                         </div>
                         <div className="text-sm text-gray-500">
                           {event.event_date
-                            ? new Date(event.event_date).toLocaleTimeString('bg-BG', {
-                                hour: '2-digit',
-                                minute: '2-digit',
-                              })
+                            ? formatTime(event.event_date)
                             : '—'}
                         </div>
                       </td>
@@ -394,4 +391,6 @@ const AdminEventsPage = () => {
 };
 
 export default AdminEventsPage;
+
+
 

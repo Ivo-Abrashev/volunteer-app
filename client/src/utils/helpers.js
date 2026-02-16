@@ -1,24 +1,34 @@
 // src/utils/helpers.js
 
-// Форматиране на дата
-export const formatDate = (dateString) => {
+const pad2 = (value) => String(value).padStart(2, '0');
+
+const getDateParts = (dateString) => {
   const date = new Date(dateString);
-  return date.toLocaleDateString('bg-BG', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  });
+  return {
+    day: pad2(date.getDate()),
+    month: pad2(date.getMonth() + 1),
+    year: date.getFullYear(),
+    hours: pad2(date.getHours()),
+    minutes: pad2(date.getMinutes()),
+  };
 };
 
+// Форматиране на дата (dd/MM/yyyy)
+export const formatDate = (dateString) => {
+  const { day, month, year } = getDateParts(dateString);
+  return `${day}/${month}/${year}`;
+};
+
+// Форматиране на час (24h)
+export const formatTime = (dateString) => {
+  const { hours, minutes } = getDateParts(dateString);
+  return `${hours}:${minutes}`;
+};
+
+// Форматиране на дата и час (dd/MM/yyyy HH:mm)
 export const formatDateTime = (dateString) => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString('bg-BG', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
+  const { day, month, year, hours, minutes } = getDateParts(dateString);
+  return `${day}/${month}/${year} ${hours}:${minutes}`;
 };
 
 // Проверка дали събитие е минало

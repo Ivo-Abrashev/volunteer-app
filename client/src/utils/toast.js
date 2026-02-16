@@ -2,47 +2,13 @@
 import toast from 'react-hot-toast';
 
 export const showSuccess = (message) => {
-  toast.success(message, {
-    style: {
-      background: '#10b981',
-      color: '#fff',
-    },
-  });
+  toast.success(message);
 };
 
 export const showError = (message) => {
-  toast.error(message, {
-    style: {
-      background: '#ef4444',
-      color: '#fff',
-    },
-  });
+  toast.error(message);
 };
 
-export const showInfo = (message) => {
-  toast(message, {
-    icon: 'ℹ️',
-    style: {
-      background: '#3b82f6',
-      color: '#fff',
-    },
-  });
-};
+export const showPromise = (promise, { loading, success, error }) =>
+  toast.promise(promise, { loading, success, error });
 
-export const showWarning = (message) => {
-  toast(message, {
-    icon: '⚠️',
-    style: {
-      background: '#f59e0b',
-      color: '#fff',
-    },
-  });
-};
-
-export const showLoading = (message) => {
-  return toast.loading(message);
-};
-
-export const dismissToast = (toastId) => {
-  toast.dismiss(toastId);
-};

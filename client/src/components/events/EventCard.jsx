@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import Card from '../common/Card';
 import Button from '../common/Button';
+import { formatDateTime } from '../../utils/helpers';
 
 const EventCard = ({
   event,
@@ -26,18 +27,6 @@ const EventCard = ({
     e.preventDefault();
     navigate(`/events/${event.id}`);
   };
-  // Форматиране на дата
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('bg-BG', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  };
-
   // Категория цветове
   const categoryColors = {
     екология: 'bg-green-100 text-green-800',
@@ -151,7 +140,7 @@ const EventCard = ({
           {/* Date */}
           <div className="flex items-center">
             <span className="mr-2">📅</span>
-            <span>{formatDate(event.event_date)}</span>
+            <span>{formatDateTime(event.event_date)}</span>
           </div>
 
           {/* Location */}
