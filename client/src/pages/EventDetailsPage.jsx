@@ -6,7 +6,7 @@ import { useAuth } from '../hooks/useAuth';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
 import { formatDateTime, getDaysUntil, getCategoryEmoji, getCategoryColor } from '../utils/helpers';
-import MapView from '../components/common/mapView';
+import MapView from '../components/common/MapView';
 import { showSuccess, showError, showPromise } from '../utils/toast';
 
 const EventDetailsPage = () => {
