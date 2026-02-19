@@ -9,6 +9,8 @@ import AdminEventsPage from './pages/AdminEventsPage';
 import AdminStatisticsPage from './pages/AdminStatisticsPage';
 import VerifyPendingPage from './pages/VerifyPendingPage';
 import VerifyEmailPage from './pages/VerifyEmailPage';
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
+import TermsPage from './pages/TermsPage';
 
 // Layout
 import Navbar from './components/common/Navbar';
@@ -61,6 +63,8 @@ function AppContent() {
             {/* Public Routes */}
             <Route path="/" element={<HomePage />} />
             <Route path="/events" element={<EventsPage />} />
+            <Route path="/privacy" element={<PrivacyPolicyPage />} />
+            <Route path="/terms" element={<TermsPage />} />
             <Route path="/events/:id" element={<EventDetailsPage />} />  {/* НОВО! */}
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
