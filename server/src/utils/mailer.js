@@ -4,6 +4,9 @@ const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
   port: Number(process.env.SMTP_PORT || 587),
   secure: false,
+  connectionTimeout: Number(process.env.SMTP_CONNECTION_TIMEOUT_MS || 10000),
+  greetingTimeout: Number(process.env.SMTP_GREETING_TIMEOUT_MS || 10000),
+  socketTimeout: Number(process.env.SMTP_SOCKET_TIMEOUT_MS || 15000),
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
@@ -11,7 +14,7 @@ const transporter = nodemailer.createTransport({
 });
 
 async function sendVerificationEmail(to, verifyUrl) {
-  return transporter.sendMail({
+  const sendPromise = transporter.sendMail({
     from: process.env.EMAIL_FROM,
     to,
     subject: 'Потвърди имейла си за Volunity',
@@ -34,6 +37,16 @@ async function sendVerificationEmail(to, verifyUrl) {
       </div>
     `,
   });
+
+  const timeoutMs = Number(process.env.SMTP_SEND_TIMEOUT_MS || 10000);
+  const timeoutPromise = new Promise((_, reject) => {
+    const timer = setTimeout(() => {
+      reject(new Error(`SMTP send timed out after ${timeoutMs}ms`));
+    }, timeoutMs);
+    timer.unref?.();
+  });
+
+  return Promise.race([sendPromise, timeoutPromise]);
 }
 
 module.exports = { sendVerificationEmail };

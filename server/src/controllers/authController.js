@@ -79,15 +79,25 @@ exports.register = async (req, res) => {
 
     if (error) throw error;
 
-    // 7. Изпрати verification email
+    // 7. Изпрати verification email (ако SMTP е блокиран/бавен, не блокирай регистрацията)
     const verifyUrl = `${process.env.CLIENT_URL}/verify-email?token=${verificationToken}`;
-    await sendVerificationEmail(newUser.email, verifyUrl);
+    let emailSent = false;
+
+    try {
+      await sendVerificationEmail(newUser.email, verifyUrl);
+      emailSent = true;
+    } catch (mailError) {
+      console.error('Грешка при изпращане на verification email:', mailError);
+    }
 
     // ❗ НЕ връщаме JWT при регистрация
     res.status(201).json({
       success: true,
       requiresEmailVerification: true,
-      message: 'Регистрацията е успешна! Моля, потвърдете имейла си.',
+      emailSent,
+      message: emailSent
+        ? 'Регистрацията е успешна! Моля, потвърдете имейла си.'
+        : 'Регистрацията е успешна, но не успяхме да изпратим имейл. Отворете страницата за потвърждение и използвайте "Изпрати линка отново".',
     });
   } catch (error) {
     console.error('Грешка при регистрация:', error);

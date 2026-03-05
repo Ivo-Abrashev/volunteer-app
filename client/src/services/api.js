@@ -3,10 +3,12 @@ import axios from 'axios';
 
 // Базов URL на backend-а
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_TIMEOUT_MS = Number(import.meta.env.VITE_API_TIMEOUT_MS || 15000);
 
 // Създай axios instance
 const api = axios.create({
   baseURL: API_URL,
+  timeout: Number.isFinite(API_TIMEOUT_MS) ? API_TIMEOUT_MS : 15000,
   headers: {
     'Content-Type': 'application/json',
   },

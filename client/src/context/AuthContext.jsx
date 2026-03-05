@@ -40,9 +40,14 @@ export const AuthProvider = ({ children }) => {
   } catch (error) {
     console.error('REGISTER ERROR:', error?.response || error); // 👈 добави това
 
+    const isTimeout =
+      error?.code === 'ECONNABORTED' ||
+      String(error?.message || '').toLowerCase().includes('timeout');
+
     return {
       success: false,
       error:
+        (isTimeout ? 'Сървърът отговаря твърде бавно. Опитайте отново след малко.' : null) ||
         error?.response?.data?.message ||
         error?.response?.data?.error || // често backend връща "error"
         'Грешка при регистрация',

@@ -1,5 +1,5 @@
 // src/components/common/LocationInput.jsx
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -67,6 +67,7 @@ const LocationInput = ({
   const [searchQuery, setSearchQuery] = useState(value || '');
   const [searchResults, setSearchResults] = useState([]);
   const [showResults, setShowResults] = useState(false);
+  const debounceRef = useRef(null);
   const initialPosition =
   initialLat != null && initialLng != null
     ? [Number(initialLat), Number(initialLng)]
@@ -84,6 +85,14 @@ const [selectedPosition, setSelectedPosition] = useState(initialPosition);
     }
   }, [initialLat, initialLng]);
 
+  useEffect(() => {
+    return () => {
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current);
+      }
+    };
+  }, []);
+
   // Търсене на локации с Nominatim (OpenStreetMap)
   const handleSearch = async (query) => {
     setSearchQuery(query);
@@ -92,6 +101,11 @@ const [selectedPosition, setSelectedPosition] = useState(initialPosition);
       onChange({ target: { name, value: query } });
     }
 
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
+
+    debounceRef.current = setTimeout(async () => {
     if (query.length < 3) {
       setSearchResults([]);
       setShowResults(false);
@@ -110,6 +124,7 @@ const [selectedPosition, setSelectedPosition] = useState(initialPosition);
     } catch (err) {
       console.error('Грешка при търсене:', err);
     }
+    }, 1000);
   };
 
   const handleSelectResult = (result) => {
