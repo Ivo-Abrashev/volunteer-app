@@ -67,8 +67,7 @@ const HomePage = () => {
                 Доброволчеството променя средата
               </h1>
               <p className="text-base sm:text-lg lg:text-xl text-white/85 max-w-xl mb-8">
-                Присъединете се към общност от хора с мисия. Открийте кауза, която има значение за
-                вас, и вложете сила там, където е най-нужно.
+                Присъединете се към общност от хора с мисия. Открийте кауза, която е значима за вас, и вложете сила там, където е най-нужно.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link to="/events">
@@ -121,9 +120,9 @@ const HomePage = () => {
               <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-3xl">✨</span>
               </div>
-              <h3 className="text-xl font-semibold mb-3 text-gray-900">Смислени каузи</h3>
+              <h3 className="text-xl font-semibold mb-3 text-gray-900">Близки до вас каузи</h3>
               <p className="text-gray-600">
-                Откривате инициативи, които отговарят на интересите и времето ви.
+                Откривайте инициативи, които отговарят на интересите и времето ви.
               </p>
             </Card>
 
