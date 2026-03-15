@@ -16,22 +16,23 @@ async function sendVerificationEmail(to, verifyUrl) {
     from: process.env.EMAIL_FROM,
     to,
     replyTo: process.env.EMAIL_REPLY_TO || undefined,
-    subject: 'Potvardi imeyla si za Volunity',
+    subject: 'Потвърди имейла си за Volunity',
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <h2>Dobre doshli vav Volunity!</h2>
-        <p>Blagodarim vi za registratsiyata. Molya, potvurdete vashiya imeyl adres, kato kliknete na butona po-dolu:</p>
+        <h2>Добре дошли във Volunity!</h2>
+        <p>Благодарим ви за регистрацията. Моля, потвърдете вашия имейл адрес, като кликнете на бутона по-долу:</p>
         <div style="text-align: center; margin: 30px 0;">
           <a href="${verifyUrl}" 
              style="background-color: #4F46E5; color: white; padding: 12px 30px; 
                     text-decoration: none; border-radius: 5px; display: inline-block;">
-            Potvardi imeyl
+            Потвърди имейл
           </a>
         </div>
-        <p>Ili kopirayte tozi link v brauzara si:</p>
+        <p>Или копирайте този линк в браузъра си:</p>
         <p style="color: #666; word-break: break-all;">${verifyUrl}</p>
         <p style="color: #999; font-size: 12px; margin-top: 30px;">
-          Ako ne ste se registrirali v nashata platforma, molya ignorirayte tozi imeyl.
+          Ако не сте се регистрирали в нашата платформа, моля игнорирайте този имейл.
+          С уважение,<br>Екипът на Volunity
         </p>
       </div>
     `,
