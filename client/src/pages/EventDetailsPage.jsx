@@ -8,6 +8,7 @@ import Card from '../components/common/Card';
 import { formatDateTime, getDaysUntil, getCategoryEmoji, getCategoryColor } from '../utils/helpers';
 import MapView from '../components/common/MapView';
 import { showSuccess, showError, showPromise } from '../utils/toast';
+import { getApiErrorMessage } from '../utils/apiError';
 
 const EventDetailsPage = () => {
   const { id } = useParams();
@@ -39,7 +40,7 @@ const EventDetailsPage = () => {
         setIsRegistered(!!userRegistration);
       }
     } catch (err) {
-      setError('Събитието не е намерено');
+      setError(getApiErrorMessage(err, 'Събитието не е намерено'));
       console.error(err);
     } finally {
       setLoading(false);
@@ -64,7 +65,7 @@ const EventDetailsPage = () => {
       showSuccess('Успешно се записахте за събитието! 🎉');
       fetchEvent(); // Refresh
     } catch (err) {
-      showError(err.response?.data?.message || 'Грешка при записване');
+      showError(getApiErrorMessage(err, 'Request failed. Please try again.'));
     } finally {
       setActionLoading(false);
     }
@@ -81,7 +82,7 @@ const EventDetailsPage = () => {
     showPromise(promise, {
       loading: 'Отписване...',
       success: 'Успешно се отписахте ✅',
-      error: (err) => err.response?.data?.message || 'Грешка при отписване',
+      error: (err) => getApiErrorMessage(err, 'Request failed. Please try again.'),
     });
 
     try {
@@ -140,7 +141,7 @@ const EventDetailsPage = () => {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Back button */}
         <Link
-          to="/my-events"
+          to="/events"
           className="inline-flex items-center text-primary-600 hover:text-primary-700 mb-6 font-medium"
         >
           <svg
@@ -156,7 +157,7 @@ const EventDetailsPage = () => {
               d="M15 19l-7-7 7-7"
             />
           </svg>
-          Назад към Моите участия
+          Назад към събития
         </Link>
 
         <div className="grid lg:grid-cols-3 gap-8">

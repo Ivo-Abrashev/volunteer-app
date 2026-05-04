@@ -30,9 +30,10 @@ async function sendVerificationEmail(to, verifyUrl) {
         </div>
         <p>Или копирайте този линк в браузъра си:</p>
         <p style="color: #666; word-break: break-all;">${verifyUrl}</p>
+        <br>
+        <p> С уважение,<br>Екипът на Volunity</p>
         <p style="color: #999; font-size: 12px; margin-top: 30px;">
           Ако не сте се регистрирали в нашата платформа, моля игнорирайте този имейл.
-          С уважение,<br>Екипът на Volunity
         </p>
       </div>
     `,

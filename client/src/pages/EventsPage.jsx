@@ -7,6 +7,7 @@ import Input from '../components/common/Input';
 import Button from '../components/common/Button';
 import { useAuth } from '../hooks/useAuth';
 import { showSuccess, showError } from '../utils/toast';
+import { getApiErrorMessage } from '../utils/apiError';
 
 
 const EventsPage = () => {
@@ -34,7 +35,7 @@ const EventsPage = () => {
       const data = await eventService.getAllEvents(filters);
       setEvents(data.events);
     } catch (err) {
-      setError('Грешка при зареждане на събития');
+      setError(getApiErrorMessage(err, 'Request failed. Please try again.'));
       console.error(err);
     } finally {
       setLoading(false);
@@ -96,7 +97,7 @@ const EventsPage = () => {
       fetchEvents();
       fetchMyRegistrations();
     } catch (err) {
-      showError(err.response?.data?.message || 'Грешка при записване');
+      showError(getApiErrorMessage(err, 'Request failed. Please try again.'));
     }
   };
 
@@ -112,7 +113,7 @@ const EventsPage = () => {
       fetchEvents();
       fetchMyRegistrations();
     } catch (err) {
-      showError(err.response?.data?.message || 'Грешка при отписване');
+      showError(getApiErrorMessage(err, 'Request failed. Please try again.'));
     }
   };
 

@@ -8,6 +8,7 @@ import Input from '../components/common/Input';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
 import { showSuccess, showError } from '../utils/toast';
+import { getApiErrorMessage } from '../utils/apiError';
 
 
 const ProfilePage = () => {
@@ -101,7 +102,7 @@ const ProfilePage = () => {
       showSuccess('Профилът е обновен успешно! ✅');
     } catch (err) {
       setErrors({
-        general: err.response?.data?.message || 'Грешка при обновяване на профил',
+        general: getApiErrorMessage(err, 'Request failed. Please try again.'),
       });
     } finally {
       setLoading(false);
@@ -141,7 +142,7 @@ const ProfilePage = () => {
       });
     } catch (err) {
       setErrors({
-        general: err.response?.data?.message || 'Грешка при промяна на парола',
+        general: getApiErrorMessage(err, 'Request failed. Please try again.'),
       });
     } finally {
       setLoading(false);
@@ -173,7 +174,7 @@ const ProfilePage = () => {
       logout();
       navigate('/');
     } catch (err) {
-      showError(err.response?.data?.message || 'Грешка при изтриване на профил');
+      showError(getApiErrorMessage(err, 'Request failed. Please try again.'));
     }
   };
 

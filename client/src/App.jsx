@@ -65,7 +65,7 @@ function AppContent() {
             <Route path="/events" element={<EventsPage />} />
             <Route path="/privacy" element={<PrivacyPolicyPage />} />
             <Route path="/terms" element={<TermsPage />} />
-            <Route path="/events/:id" element={<EventDetailsPage />} />  {/* НОВО! */}
+            <Route path="/events/:id" element={<EventDetailsPage />} /> 
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/verify-pending" element={<VerifyPendingPage />} />

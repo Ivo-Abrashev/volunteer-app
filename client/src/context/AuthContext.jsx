@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import authService from '../services/authService';
 import { AuthContext } from './AuthContextBase';
+import { getApiErrorMessage } from '../utils/apiError';
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -27,33 +28,25 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       return {
         success: false,
-        error: error.response?.data?.message || 'Грешка при влизане',
+        error: getApiErrorMessage(error, 'Грешка при влизане'),
       };
     }
   };
 
   const register = async (userData) => {
-  try {
-    const data = await authService.register(userData);
-    setUser(data.user);
-    return { success: true, data };
-  } catch (error) {
-    console.error('REGISTER ERROR:', error?.response || error); // 👈 добави това
+    try {
+      const data = await authService.register(userData);
+      setUser(data.user);
+      return { success: true, data };
+    } catch (error) {
+      console.error('REGISTER ERROR:', error?.response || error);
 
-    const isTimeout =
-      error?.code === 'ECONNABORTED' ||
-      String(error?.message || '').toLowerCase().includes('timeout');
-
-    return {
-      success: false,
-      error:
-        (isTimeout ? 'Сървърът отговаря твърде бавно. Опитайте отново след малко.' : null) ||
-        error?.response?.data?.message ||
-        error?.response?.data?.error || // често backend връща "error"
-        'Грешка при регистрация',
-    };
-  }
-};
+      return {
+        success: false,
+        error: getApiErrorMessage(error, 'Грешка при регистрация'),
+      };
+    }
+  };
 
   const logout = () => {
     authService.logout();
@@ -73,9 +66,6 @@ export const AuthProvider = ({ children }) => {
     hasRole,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
+

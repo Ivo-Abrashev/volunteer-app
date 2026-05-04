@@ -6,6 +6,7 @@ import Card from '../components/common/Card';
 import Button from '../components/common/Button';
 import RoleChangeModal from '../components/common/RoleChangeModal';
 import { showPromise } from '../utils/toast';
+import { getApiErrorMessage } from '../utils/apiError';
 
 const AdminUsersPage = () => {
   const [users, setUsers] = useState([]);
@@ -55,7 +56,7 @@ const AdminUsersPage = () => {
     showPromise(promise, {
       loading: 'Промяна на роля...',
       success: 'Ролята е променена успешно! ✅',
-      error: (err) => err.response?.data?.message || 'Грешка при промяна на роля',
+      error: (err) => getApiErrorMessage(err, 'Request failed. Please try again.'),
     });
 
     try {
@@ -92,8 +93,7 @@ const AdminUsersPage = () => {
     showPromise(promise, {
       loading: 'Изтриване...',
       success: 'Потребителят е изтрит успешно!',
-      error: (err) =>
-        err.response?.data?.message || 'Грешка при изтриване на потребител',
+      error: (err) => getApiErrorMessage(err, 'Request failed. Please try again.'),
     });
 
     try {

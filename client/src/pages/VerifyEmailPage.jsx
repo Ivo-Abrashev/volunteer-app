@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import api from '../services/api';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
+import { getApiErrorMessage } from '../utils/apiError';
 
 const VerifyEmailPage = () => {
   const [searchParams] = useSearchParams();
@@ -30,7 +31,7 @@ const VerifyEmailPage = () => {
         setMessage(res.data?.message || 'Имейлът е потвърден успешно!');
       } catch (err) {
         setStatus('error');
-        setMessage(err.response?.data?.message || 'Грешка при потвърждение.');
+        setMessage(getApiErrorMessage(err, 'Request failed. Please try again.'));
       }
     };
 

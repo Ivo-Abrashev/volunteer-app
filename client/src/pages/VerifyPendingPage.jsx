@@ -4,6 +4,7 @@ import { showError, showPromise } from '../utils/toast';
 import api from '../services/api';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
+import { getApiErrorMessage } from '../utils/apiError';
 
 const VerifyPendingPage = () => {
   const [email, setEmail] = useState('');
@@ -16,7 +17,7 @@ const VerifyPendingPage = () => {
     showPromise(promise, {
       loading: 'Изпращане...',
       success: (res) => res.data?.message || 'Изпратихме линк!',
-      error: (err) => err.response?.data?.message || 'Грешка при изпращане',
+      error: (err) => getApiErrorMessage(err, 'Request failed. Please try again.'),
     });
 
     try {

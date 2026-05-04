@@ -6,6 +6,7 @@ import Button from '../components/common/Button';
 import Card from '../components/common/Card';
 import LocationInput from '../components/common/LocationInput';
 import { showSuccess } from '../utils/toast';
+import { getApiErrorMessage } from '../utils/apiError';
 
 const EditEventPage = () => {
   const { id } = useParams();
@@ -129,7 +130,7 @@ const EditEventPage = () => {
       navigate('/dashboard');
     } catch (err) {
       setErrors({
-        general: err.response?.data?.message || 'Грешка при обновяване на събитие',
+        general: getApiErrorMessage(err, 'Request failed. Please try again.'),
       });
     } finally {
       setSaving(false);

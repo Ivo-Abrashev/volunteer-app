@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { showError, showPromise } from '../utils/toast';
+import { getApiErrorMessage } from '../utils/apiError';
 
 import StatusChangeModal from '../components/common/StatusChangeModal';
 import eventService from '../services/eventService';
@@ -78,8 +79,7 @@ const AdminEventsPage = () => {
     showPromise(promise, {
       loading: 'Изтриване...',
       success: 'Събитието е изтрито успешно!',
-      error: (err) =>
-        err.response?.data?.message || 'Грешка при изтриване на събитие',
+      error: (err) => getApiErrorMessage(err, 'Request failed. Please try again.'),
     });
 
     try {
@@ -118,7 +118,7 @@ const AdminEventsPage = () => {
     showPromise(promise, {
       loading: 'Промяна на статус...',
       success: 'Статусът е променен успешно! ✅',
-      error: (err) => err.response?.data?.message || 'Грешка при промяна на статус',
+      error: (err) => getApiErrorMessage(err, 'Request failed. Please try again.'),
     });
 
     try {

@@ -5,6 +5,7 @@ import eventService from '../services/eventService';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
 import { showSuccess, showError } from '../utils/toast';
+import { getApiErrorMessage } from '../utils/apiError';
 
 
 const EventParticipantsPage = () => {
@@ -22,10 +23,7 @@ const EventParticipantsPage = () => {
       const result = await eventService.getEventParticipants(id);
       setData(result);
     } catch (err) {
-      setError(
-        err.response?.data?.message ||
-          'Грешка при зареждане на участници'
-      );
+      setError(getApiErrorMessage(err, 'Request failed. Please try again.'));
       console.error(err);
     } finally {
       setLoading(false);
@@ -47,7 +45,7 @@ const EventParticipantsPage = () => {
       );
       fetchParticipants(); // Refresh
     } catch (err) {
-      showError(err.response?.data?.message || 'Грешка при маркиране');
+      showError(getApiErrorMessage(err, 'Request failed. Please try again.'));
     }
   };
 

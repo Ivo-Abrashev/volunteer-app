@@ -7,6 +7,7 @@ import Button from '../components/common/Button';
 import Card from '../components/common/Card';
 import LocationInput from '../components/common/LocationInput'; 
 import { showSuccess } from '../utils/toast';
+import { getApiErrorMessage } from '../utils/apiError';
 
 const CreateEventPage = () => {
   const navigate = useNavigate();
@@ -92,7 +93,7 @@ const CreateEventPage = () => {
       navigate('/dashboard');
     } catch (err) {
       setErrors({
-        general: err.response?.data?.message || 'Грешка при създаване на събитие',
+        general: getApiErrorMessage(err, 'Request failed. Please try again.'),
       });
     } finally {
       setLoading(false);

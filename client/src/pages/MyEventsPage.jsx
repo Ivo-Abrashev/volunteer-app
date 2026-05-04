@@ -7,6 +7,7 @@ import Button from '../components/common/Button';
 import Card from '../components/common/Card';
 import { formatDateTime, getDaysUntil } from '../utils/helpers';
 import { showSuccess, showError } from '../utils/toast';
+import { getApiErrorMessage } from '../utils/apiError';
 
 const MyEventsPage = () => {
   const [registrations, setRegistrations] = useState([]);
@@ -23,7 +24,7 @@ const MyEventsPage = () => {
       const data = await eventService.getMyRegistrations();
       setRegistrations(data.registrations);
     } catch (err) {
-      setError('Грешка при зареждане на събития');
+      setError(getApiErrorMessage(err, 'Request failed. Please try again.'));
       console.error(err);
     } finally {
       setLoading(false);
@@ -45,7 +46,7 @@ const MyEventsPage = () => {
       showSuccess('Успешно се отписахте от събитието');
       fetchRegistrations(); // Refresh
     } catch (err) {
-      showError(err.response?.data?.message || 'Грешка при отписване');
+      showError(getApiErrorMessage(err, 'Request failed. Please try again.'));
     }
   };
 

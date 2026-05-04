@@ -8,6 +8,7 @@ import Card from '../components/common/Card';
 import Button from '../components/common/Button';
 import { formatDateTime, getDaysUntil, getCategoryColor } from '../utils/helpers';
 import { showSuccess, showError, showPromise } from '../utils/toast';
+import { getApiErrorMessage } from '../utils/apiError';
 
 const DashboardPage = () => {
   const [myEvents, setMyEvents] = useState([]);
@@ -25,7 +26,7 @@ const DashboardPage = () => {
     const data = await eventService.getMyEvents();
     setMyEvents(data.events); // КОРИГИРАНО!
   } catch (err) {
-    setError('Грешка при зареждане на събития');
+    setError(getApiErrorMessage(err, 'Request failed. Please try again.'));
     console.error(err);
   } finally {
     setLoading(false);
@@ -47,7 +48,7 @@ const DashboardPage = () => {
     showPromise(promise, {
       loading: 'Изтриване...',
       success: 'Събитието е изтрито успешно!',
-      error: (err) => err.response?.data?.message || 'Грешка при изтриване',
+      error: (err) => getApiErrorMessage(err, 'Request failed. Please try again.'),
     });
 
     try {
@@ -73,7 +74,7 @@ const DashboardPage = () => {
       showSuccess('Събитието е публикувано успешно! 🎉');
       fetchMyEvents(); // Refresh
     } catch (err) {
-      showError(err.response?.data?.message || 'Грешка при публикуване');
+      showError(getApiErrorMessage(err, 'Request failed. Please try again.'));
     }
   };
 
